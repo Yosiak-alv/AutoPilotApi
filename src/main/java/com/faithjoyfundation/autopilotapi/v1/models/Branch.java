@@ -13,7 +13,13 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "branches")
+@Table(
+        name = "branches",
+        uniqueConstraints = {
+            @UniqueConstraint(columnNames = "email", name = "UQ_branches_email"),
+            @UniqueConstraint(columnNames = "phone", name = "UQ_branches_phone")
+        }
+)
 @NoArgsConstructor
 @AllArgsConstructor
 @Setter
@@ -26,10 +32,8 @@ public class Branch {
 
     private String name;
 
-    @Column(unique = true)
     private String email;
 
-    @Column(unique = true)
     private String phone;
 
     private boolean main;

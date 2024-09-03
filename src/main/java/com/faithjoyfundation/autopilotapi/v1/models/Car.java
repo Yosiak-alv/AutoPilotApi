@@ -10,7 +10,13 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "cars")
+@Table(
+        name = "cars",
+        uniqueConstraints = {
+            @UniqueConstraint(columnNames = "plates", name = "UQ_brands_plates"),
+            @UniqueConstraint(columnNames = "VIN", name = "UQ_brands_VIN"),
+        }
+)
 @NoArgsConstructor
 @AllArgsConstructor
 @Setter
@@ -21,10 +27,8 @@ public class Car {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
     private String plates;
 
-    @Column(unique = true)
     private String VIN;
 
     @Column(name = "current_mileage")

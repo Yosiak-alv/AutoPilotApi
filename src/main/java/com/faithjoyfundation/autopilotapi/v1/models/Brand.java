@@ -8,7 +8,12 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "brands")
+@Table(
+        name = "brands",
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = "name", name = "UQ_brands_name")
+        }
+)
 @NoArgsConstructor
 @AllArgsConstructor
 @Setter
@@ -19,7 +24,6 @@ public class Brand {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
     private String name;
 
     @OneToMany(mappedBy = "brand", cascade = CascadeType.ALL)
