@@ -8,6 +8,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(
@@ -49,4 +51,8 @@ public class WorkShop {
     @JoinColumn(name = "municipality_id", foreignKey = @ForeignKey(name = "FK_workshops_municipalities"))
     @JsonIgnoreProperties({"workshops", "hibernateLazyInitializer", "handler"})
     private Municipality municipality;
+
+    @OneToMany(mappedBy = "workshop", cascade = CascadeType.ALL)
+    @JsonIgnoreProperties({"workshop", "hibernateLazyInitializer", "handler"})
+    private Set<Repair> repairs = new HashSet<>();
 }

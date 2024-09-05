@@ -8,6 +8,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(
@@ -32,7 +34,7 @@ public class Car {
     private String VIN;
 
     @Column(name = "current_mileage")
-    private String currentMileage;
+    private Double currentMileage;
 
     private Integer year;
 
@@ -59,4 +61,8 @@ public class Car {
     @JoinColumn(name = "branch_id", foreignKey = @ForeignKey(name = "FK_cars_branches"))
     @JsonIgnoreProperties({"cars", "hibernateLazyInitializer", "handler"})
     private Branch branch;
+
+    @OneToMany(mappedBy = "car", cascade = CascadeType.ALL)
+    @JsonIgnoreProperties({"car", "hibernateLazyInitializer", "handler"})
+    private Set<Repair> repairs = new HashSet<>();
 }

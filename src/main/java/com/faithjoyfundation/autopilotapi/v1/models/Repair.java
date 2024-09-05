@@ -36,6 +36,11 @@ public class Repair {
     private LocalDateTime updatedAt;
 
     @ManyToOne
+    @JoinColumn(name = "workshop_id", foreignKey = @ForeignKey(name = "FK_repairs_workshops"))
+    @JsonIgnoreProperties({"repairs", "hibernateLazyInitializer", "handler"})
+    private WorkShop workshop;
+
+    @ManyToOne
     @JoinColumn(name = "car_id", foreignKey = @ForeignKey(name = "FK_repairs_cars"))
     @JsonIgnoreProperties({"repairs", "hibernateLazyInitializer", "handler"})
     private Car car;

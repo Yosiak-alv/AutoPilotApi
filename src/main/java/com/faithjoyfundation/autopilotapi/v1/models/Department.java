@@ -23,7 +23,7 @@ public class Department {
     private String name;
 
     @OneToMany(mappedBy = "department", cascade = CascadeType.ALL)
-    @JsonIgnoreProperties({"department", "hibernateLazyInitializer", "handler"})
+    @JsonIgnoreProperties({"department","branches","workShops", "hibernateLazyInitializer", "handler"})
     private Set<Municipality> municipalities = new HashSet<>();
 
     @Override
