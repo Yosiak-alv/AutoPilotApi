@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 
 @Data
@@ -32,7 +33,7 @@ public class CarDTO {
     private BranchDTO branch;
 
     @JsonIgnoreProperties({"car"})
-    private Set<RepairDTO> repairs;
+    private Set<RepairDTO> repairs = new HashSet<>();
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime created;

@@ -2,17 +2,14 @@ package com.faithjoyfundation.autopilotapi.v1.services.impl;
 
 import com.faithjoyfundation.autopilotapi.v1.common.pagination.PaginatedResponse;
 import com.faithjoyfundation.autopilotapi.v1.dto.cars.CarDTO;
+import com.faithjoyfundation.autopilotapi.v1.dto.cars.CarRepairRequest;
 import com.faithjoyfundation.autopilotapi.v1.dto.cars.CarRequest;
 import com.faithjoyfundation.autopilotapi.v1.exceptions.BadRequestException;
 import com.faithjoyfundation.autopilotapi.v1.exceptions.FieldUniqueException;
 import com.faithjoyfundation.autopilotapi.v1.exceptions.ResourceNotFoundException;
-import com.faithjoyfundation.autopilotapi.v1.models.Branch;
-import com.faithjoyfundation.autopilotapi.v1.models.Car;
-import com.faithjoyfundation.autopilotapi.v1.models.Model;
+import com.faithjoyfundation.autopilotapi.v1.models.*;
 import com.faithjoyfundation.autopilotapi.v1.repositories.CarRepository;
-import com.faithjoyfundation.autopilotapi.v1.services.BranchService;
-import com.faithjoyfundation.autopilotapi.v1.services.CarService;
-import com.faithjoyfundation.autopilotapi.v1.services.ModelService;
+import com.faithjoyfundation.autopilotapi.v1.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,6 +17,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class CarServiceImpl implements CarService {
@@ -31,6 +30,18 @@ public class CarServiceImpl implements CarService {
 
     @Autowired
     private ModelService modelService;
+
+    //@Autowired
+    //private RepairService repairService;
+
+    @Autowired
+    private WorkShopService workShopService;
+
+    @Autowired
+    private RepairStatusService repairStatusService;
+
+    @Autowired
+    private RepairService repairService;
 
     @Override
     public PaginatedResponse<CarDTO> findAll(String search, int page, int size) {
@@ -77,6 +88,34 @@ public class CarServiceImpl implements CarService {
         car.setBranch(branch);
         car.setModel(model);
         return new CarDTO(this.carRepository.save(car), true, true, true);
+    }
+
+    @Override
+    public CarDTO createRepair(Long id, CarRepairRequest carRepairRequest) {
+        Car car = this.findModelById(id);
+        WorkShop workShop = workShopService.findModelById(carRepairRequest.getWorkshopId());
+        RepairStatus repairStatus = repairStatusService.findById(carRepairRequest.getRepairStatusId());
+
+        Repair repair = new Repair();
+        repair.setCar(car);
+        repair.setWorkshop(workShop);
+        repair.setRepairStatus(repairStatus);
+        repair.setTotal(carRepairRequest.calculateTotal());
+        repair.setRepairDetails(carRepairRequest.getDetails().stream().map(
+                repairDetailRequest -> {
+                    RepairDetail repairDetail = new RepairDetail();
+                    repairDetail.setRepair(repair);
+                    repairDetail.setName(repairDetailRequest.getName());
+                    repairDetail.setDescription(repairDetailRequest.getDescription());
+                    repairDetail.setPrice(repairDetailRequest.getPrice());
+                    return repairDetail;
+                }
+        ).collect(Collectors.toSet()));
+
+        Repair savedRepair = repairService.create(repair);
+        car = this.findModelById(id);
+
+        return new CarDTO(car, true, true, true);
     }
 
     @Override
