@@ -29,7 +29,7 @@ public class BranchDTO {
 
     private MunicipalityDTO municipality;
 
-    public BranchDTO(Branch branch, boolean includeMunicipality) {
+    public BranchDTO(Branch branch) {
         this.id = branch.getId();
         this.name = branch.getName();
         this.email = branch.getEmail();
@@ -38,8 +38,6 @@ public class BranchDTO {
         this.main = branch.isMain();
         this.created = branch.getCreatedAt();
         this.updated = branch.getUpdatedAt();
-        if (includeMunicipality) {
-            this.municipality = new MunicipalityDTO(branch.getMunicipality());
-        }
+        this.municipality = new MunicipalityDTO(branch.getMunicipality());
     }
 }

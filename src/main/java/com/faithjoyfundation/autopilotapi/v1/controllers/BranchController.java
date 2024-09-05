@@ -1,12 +1,9 @@
 package com.faithjoyfundation.autopilotapi.v1.controllers;
 
 import com.faithjoyfundation.autopilotapi.v1.common.pagination.PaginatedResponse;
-import com.faithjoyfundation.autopilotapi.v1.dto.branches.BranchCreateRequest;
+import com.faithjoyfundation.autopilotapi.v1.dto.branches.BranchListDTO;
+import com.faithjoyfundation.autopilotapi.v1.dto.branches.BranchRequest;
 import com.faithjoyfundation.autopilotapi.v1.dto.branches.BranchDTO;
-import com.faithjoyfundation.autopilotapi.v1.dto.branches.BranchUpdateRequest;
-import com.faithjoyfundation.autopilotapi.v1.dto.workshops.WorkShopCreateRequest;
-import com.faithjoyfundation.autopilotapi.v1.dto.workshops.WorkShopDTO;
-import com.faithjoyfundation.autopilotapi.v1.dto.workshops.WorkShopUpdateRequest;
 import com.faithjoyfundation.autopilotapi.v1.services.BranchService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -27,7 +24,7 @@ public class BranchController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size
     ){
-        PaginatedResponse<BranchDTO> branches = branchService.findAll(search, page, size);
+        PaginatedResponse<BranchListDTO> branches = branchService.findAll(search, page, size);
         return ResponseEntity.ok(branches);
     }
 
@@ -37,14 +34,14 @@ public class BranchController {
     }
 
     @PostMapping
-    public ResponseEntity<?> create(@Valid @RequestBody BranchCreateRequest branchCreateRequest) {
-        BranchDTO branchDTO = branchService.create(branchCreateRequest);
+    public ResponseEntity<?> create(@Valid @RequestBody BranchRequest branchRequest) {
+        BranchDTO branchDTO = branchService.create(branchRequest);
         return (branchDTO != null) ? ResponseEntity.status(201).body(branchDTO) : ResponseEntity.internalServerError().build();
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable Long id, @Valid @RequestBody BranchUpdateRequest branchUpdateRequest) {
-        BranchDTO branchDTO = branchService.update(id,  branchUpdateRequest);
+    public ResponseEntity<?> update(@PathVariable Long id, @Valid @RequestBody BranchRequest branchRequest) {
+        BranchDTO branchDTO = branchService.update(id,  branchRequest);
         return (branchDTO != null) ? ResponseEntity.status(200).body(branchDTO) : ResponseEntity.internalServerError().build();
     }
 }

@@ -1,9 +1,9 @@
 package com.faithjoyfundation.autopilotapi.v1.services.impl;
 
 import com.faithjoyfundation.autopilotapi.v1.common.pagination.PaginatedResponse;
-import com.faithjoyfundation.autopilotapi.v1.dto.branches.BranchCreateRequest;
+import com.faithjoyfundation.autopilotapi.v1.dto.branches.BranchRequest;
 import com.faithjoyfundation.autopilotapi.v1.dto.branches.BranchDTO;
-import com.faithjoyfundation.autopilotapi.v1.dto.branches.BranchUpdateRequest;
+import com.faithjoyfundation.autopilotapi.v1.dto.branches.BranchListDTO;
 import com.faithjoyfundation.autopilotapi.v1.exceptions.FieldUniqueException;
 import com.faithjoyfundation.autopilotapi.v1.exceptions.ResourceNotFoundException;
 import com.faithjoyfundation.autopilotapi.v1.models.Branch;
@@ -29,64 +29,39 @@ public class BranchServiceImpl implements BranchService {
     private MunicipalityService municipalityService;
 
     @Override
-    public PaginatedResponse<BranchDTO> findAll(String search, int page, int size) {
+    public PaginatedResponse<BranchListDTO> findAll(String search, int page, int size) {
         validatePageNumberAndSize(page, size);
         Pageable pageable = PageRequest.of(page, size);
-        Page<BranchDTO> branchDTOS;
+        Page<BranchListDTO> branches;
         if (search == null || search.isEmpty()) {
-            branchDTOS = branchRepository.findAllOrderedById(pageable).map(
-                    branch -> new BranchDTO(branch, true)
-            );
+            branches = branchRepository.findAllOrderedById(pageable).map(BranchListDTO::new);
         } else {
-            branchDTOS = branchRepository.findAllBySearch(search, pageable).map(
-                    branch -> new BranchDTO(branch, true)
-            );
+            branches = branchRepository.findAllBySearch(search, pageable).map(BranchListDTO::new);
         }
-        return new PaginatedResponse<>(branchDTOS);
+        return new PaginatedResponse<>(branches);
     }
 
     @Override
     public BranchDTO findDTOById(Long id) {
         Branch branch = this.findModelById(id);
-        return new BranchDTO(branch, false);
+        return new BranchDTO(branch);
     }
 
     @Override
     public Branch findModelById(Long id) {
         return this.branchRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Branch not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Sucursal no encontrada con id: " + id));
     }
 
     @Override
-    public BranchDTO create(BranchCreateRequest branchCreateRequest) {
-        Municipality municipality = this.municipalityService.findById(branchCreateRequest.getMunicipalityId());
-        validateUniqueFields(branchCreateRequest.getEmail(), branchCreateRequest.getPhone(), null);
-
-        Branch branch = new Branch();
-        branch.setName(branchCreateRequest.getName());
-        branch.setEmail(branchCreateRequest.getEmail());
-        branch.setPhone(branchCreateRequest.getPhone());
-        branch.setAddress(branchCreateRequest.getAddress());
-        branch.setMain(branchCreateRequest.isMain());
-        branch.setMunicipality(municipality);
-        branch = this.branchRepository.save(branch);
-        return new BranchDTO(branch, true);
+    public BranchDTO create(BranchRequest branchRequest) {
+        return this.saveOrUpdateBranch(new Branch(), branchRequest, null);
     }
 
     @Override
-    public BranchDTO update(Long id, BranchUpdateRequest branchUpdateRequest) {
+    public BranchDTO update(Long id, BranchRequest branchRequest) {
         Branch existingBranch = this.findModelById(id);
-        Municipality municipality = this.municipalityService.findById(branchUpdateRequest.getMunicipalityId());
-        validateUniqueFields(branchUpdateRequest.getEmail(), branchUpdateRequest.getPhone(), id);
-
-        existingBranch.setName(branchUpdateRequest.getName());
-        existingBranch.setEmail(branchUpdateRequest.getEmail());
-        existingBranch.setPhone(branchUpdateRequest.getPhone());
-        existingBranch.setAddress(branchUpdateRequest.getAddress());
-        existingBranch.setMain(branchUpdateRequest.isMain());
-        existingBranch.setMunicipality(municipality);
-        existingBranch = this.branchRepository.save(existingBranch);
-        return new BranchDTO(existingBranch, true);
+        return this.saveOrUpdateBranch(existingBranch, branchRequest, id);
     }
 
     @Override
@@ -94,26 +69,40 @@ public class BranchServiceImpl implements BranchService {
         return null;
     }
 
+    private BranchDTO saveOrUpdateBranch(Branch branch, BranchRequest branchRequest, Long id) {
+        Municipality municipality = this.municipalityService.findById(branchRequest.getMunicipalityId());
+        validateUniqueFields(branchRequest.getEmail(), branchRequest.getPhone(), id);
+
+        branch.setName(branchRequest.getName());
+        branch.setEmail(branchRequest.getEmail());
+        branch.setPhone(branchRequest.getPhone());
+        branch.setAddress(branchRequest.getAddress());
+        branch.setMain(branchRequest.isMain());
+        branch.setMunicipality(municipality);
+        branch = this.branchRepository.save(branch);
+        return new BranchDTO(branch);
+    }
+
     private void validateUniqueFields(String email, String phone, Long existingId) throws FieldUniqueException {
 
         Optional<Branch> existingBranch = this.branchRepository.findByEmail(email);
         if (existingBranch.isPresent() && !existingBranch.get().getId().equals(existingId)) {
-            throw new FieldUniqueException("Email already exists on another branch");
+            throw new BadRequestException("correo electrónico ya existe en otra sucursal");
         }
 
         existingBranch = this.branchRepository.findByPhone(phone);
         if (existingBranch.isPresent() && !existingBranch.get().getId().equals(existingId)) {
-            throw new FieldUniqueException("phone already exists on another branch");
+            throw new BadRequestException("teléfono ya existe en otra sucursal");
         }
     }
 
     private void validatePageNumberAndSize(int page, int size) {
         if (page < 0) {
-            throw new BadRequestException("Page number cannot be less than zero.");
+            throw new BadRequestException("el número de página no puede ser menor que cero.");
         }
 
         if (size <= 0) {
-            throw new BadRequestException("Size number cannot be less than or equal to zero.");
+            throw new BadRequestException("el tamaño de la página no puede ser menor o igual a cero.");
         }
     }
 }

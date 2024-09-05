@@ -4,7 +4,7 @@ import jakarta.validation.constraints.*;
 import lombok.Data;
 
 @Data
-public class BranchUpdateRequest {
+public class BranchRequest {
     @NotNull
     @NotEmpty
     @Size(min = 3, max = 50)
@@ -17,7 +17,7 @@ public class BranchUpdateRequest {
 
     @NotNull
     @NotEmpty
-    @Pattern(regexp = "^[2678][0-9]{7}$", message = "invalid phone number")
+    @Pattern(regexp = "^[2678][0-9]{7}$", message = "numero de telefono invalido (debe empezar con 2, 6, 7 u 8)")
     private String phone;
 
     @NotNull
