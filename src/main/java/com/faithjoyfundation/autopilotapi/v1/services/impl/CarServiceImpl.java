@@ -2,8 +2,10 @@ package com.faithjoyfundation.autopilotapi.v1.services.impl;
 
 import com.faithjoyfundation.autopilotapi.v1.common.pagination.PaginatedResponse;
 import com.faithjoyfundation.autopilotapi.v1.dto.cars.CarDTO;
+import com.faithjoyfundation.autopilotapi.v1.dto.cars.CarListDTO;
 import com.faithjoyfundation.autopilotapi.v1.dto.cars.CarRepairRequest;
 import com.faithjoyfundation.autopilotapi.v1.dto.cars.CarRequest;
+import com.faithjoyfundation.autopilotapi.v1.dto.cars.relationships.CarRepairDTO;
 import com.faithjoyfundation.autopilotapi.v1.exceptions.BadRequestException;
 import com.faithjoyfundation.autopilotapi.v1.exceptions.FieldUniqueException;
 import com.faithjoyfundation.autopilotapi.v1.exceptions.ResourceNotFoundException;
@@ -16,6 +18,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -34,94 +38,56 @@ public class CarServiceImpl implements CarService {
     //@Autowired
     //private RepairService repairService;
 
-    @Autowired
-    private WorkShopService workShopService;
-
-    @Autowired
-    private RepairStatusService repairStatusService;
-
-    @Autowired
-    private RepairService repairService;
-
     @Override
-    public PaginatedResponse<CarDTO> findAll(String search, int page, int size) {
+    public PaginatedResponse<CarListDTO> findAll(String search, int page, int size) {
         validatePageNumberAndSize(page, size);
         Pageable pageable = PageRequest.of(page, size);
-        Page<CarDTO> carDTOS;
+        Page<CarListDTO> cars;
         if (search == null || search.isEmpty()) {
-            carDTOS = carRepository.findAllOrderedById(pageable).map(
-                    car -> new CarDTO(car, true, true, false)
-            );
+            cars = carRepository.findAllOrderedById(pageable).map(CarListDTO::new);
         } else {
-            carDTOS = carRepository.findAllBySearch(search, pageable).map(
-                    car -> new CarDTO(car, true, true, false)
-            );
+            cars = carRepository.findAllBySearch(search, pageable).map(CarListDTO::new);
         }
-        return new PaginatedResponse<>(carDTOS);
+        return new PaginatedResponse<>(cars);
     }
 
     @Override
     public CarDTO findDTOById(Long id) {
         Car car = this.findModelById(id);
-        return new CarDTO(car, true, true, true);
+        return new CarDTO(car);
+    }
+
+    @Override
+    public List<CarRepairDTO> findRepairsDTOById(Long id) {
+        Car car = this.findModelById(id);
+        Set<Repair> repairs = car.getRepairs();
+        return repairs.stream().map(CarRepairDTO::new).distinct().collect(Collectors.toList());
     }
 
     @Override
     public Car findModelById(Long id) {
         return carRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Car not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Auto no encontrado con id: " + id));
     }
 
     @Override
     public CarDTO create(CarRequest carRequest) {
-        Branch branch = branchService.findModelById(1L); // TODO: remove hardcoded value
-        Model model = modelService.findModelById(carRequest.getModelId());
-        validateUniqueFields(carRequest.getPlates(), carRequest.getVIN(), null);
-
-        Car car = new Car();
-        car.setPlates(carRequest.getPlates());
-        car.setVIN(carRequest.getVIN());
-        car.setMotorID(carRequest.getMotorId());
-        car.setCurrentMileage(carRequest.getMileage());
-        car.setYear(carRequest.getYear());
-        car.setColor(carRequest.getColor());
-        car.setBranch(branch);
-        car.setModel(model);
-        return new CarDTO(this.carRepository.save(car), true, true, true);
-    }
-
-    @Override
-    public CarDTO createRepair(Long id, CarRepairRequest carRepairRequest) {
-        Car car = this.findModelById(id);
-        WorkShop workShop = workShopService.findModelById(carRepairRequest.getWorkshopId());
-        RepairStatus repairStatus = repairStatusService.findById(carRepairRequest.getRepairStatusId());
-
-        Repair repair = new Repair();
-        repair.setCar(car);
-        repair.setWorkshop(workShop);
-        repair.setRepairStatus(repairStatus);
-        repair.setTotal(carRepairRequest.calculateTotal());
-        repair.setRepairDetails(carRepairRequest.getDetails().stream().map(
-                repairDetailRequest -> {
-                    RepairDetail repairDetail = new RepairDetail();
-                    repairDetail.setRepair(repair);
-                    repairDetail.setName(repairDetailRequest.getName());
-                    repairDetail.setDescription(repairDetailRequest.getDescription());
-                    repairDetail.setPrice(repairDetailRequest.getPrice());
-                    return repairDetail;
-                }
-        ).collect(Collectors.toSet()));
-
-        Repair savedRepair = repairService.create(repair);
-        car = this.findModelById(id);
-
-        return new CarDTO(car, true, true, true);
+        return saveOrUpdateCar(new Car(), carRequest, null);
     }
 
     @Override
     public CarDTO update(Long id, CarRequest carRequest) {
         Car car = this.findModelById(id);
-        Branch branch = branchService.findModelById(1L); // TODO: remove hardcoded value
+        return saveOrUpdateCar(car, carRequest, id);
+    }
+
+    @Override
+    public CarDTO deleteById(Long id) {
+        return null;
+    }
+
+    private CarDTO saveOrUpdateCar(Car car, CarRequest carRequest, Long id) {
+        Branch branch = branchService.findModelById(carRequest.getBranchId());
         Model model = modelService.findModelById(carRequest.getModelId());
         validateUniqueFields(carRequest.getPlates(), carRequest.getVIN(), id);
 
@@ -133,33 +99,29 @@ public class CarServiceImpl implements CarService {
         car.setColor(carRequest.getColor());
         car.setBranch(branch);
         car.setModel(model);
-        return new CarDTO(this.carRepository.save(car), true, true, true);
-    }
-
-    @Override
-    public CarDTO deleteById(Long id) {
-        return null;
+        car = this.carRepository.save(car);
+        return new CarDTO(car);
     }
 
     private void validateUniqueFields(String plates, String VIN, Long existingId) {
         Optional<Car> existingCar = carRepository.findByPlates(plates);
         if (existingCar.isPresent() && !existingCar.get().getId().equals(existingId)) {
-            throw new FieldUniqueException("plates already exists on another car");
+            throw new FieldUniqueException("placas ya existen en otro carro");
         }
 
         existingCar = this.carRepository.findByVIN(VIN);
         if (existingCar.isPresent() && !existingCar.get().getId().equals(existingId)) {
-            throw new FieldUniqueException("VIN already exists on another car");
+            throw new FieldUniqueException("VIN ya existe en otro carro");
         }
     }
 
     private void validatePageNumberAndSize(int page, int size) {
         if (page < 0) {
-            throw new BadRequestException("Page number cannot be less than zero.");
+            throw new BadRequestException("el número de página no puede ser menor que cero.");
         }
 
         if (size <= 0) {
-            throw new BadRequestException("Size number cannot be less than or equal to zero.");
+            throw new BadRequestException("el tamaño de la página no puede ser menor o igual a cero.");
         }
     }
 }

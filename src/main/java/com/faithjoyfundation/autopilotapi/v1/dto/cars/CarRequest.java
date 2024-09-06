@@ -37,4 +37,8 @@ public class CarRequest {
     @NotNull
     @Positive
     private Long modelId;
+
+    @NotNull
+    @Positive
+    private Long branchId;
 }

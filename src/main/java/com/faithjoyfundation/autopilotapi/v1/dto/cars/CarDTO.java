@@ -1,6 +1,7 @@
 package com.faithjoyfundation.autopilotapi.v1.dto.cars;
 
 import com.faithjoyfundation.autopilotapi.v1.dto.branches.BranchDTO;
+import com.faithjoyfundation.autopilotapi.v1.dto.cars.relationships.CarRepairDTO;
 import com.faithjoyfundation.autopilotapi.v1.dto.models.ModelDTO;
 import com.faithjoyfundation.autopilotapi.v1.dto.repairs.RepairDTO;
 import com.faithjoyfundation.autopilotapi.v1.models.Car;
@@ -32,16 +33,13 @@ public class CarDTO {
 
     private BranchDTO branch;
 
-    @JsonIgnoreProperties({"car"})
-    private Set<RepairDTO> repairs = new HashSet<>();
-
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime created;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime updated;
 
-    public CarDTO(Car car, boolean includeModel, boolean includeBranch, boolean includeRepairs) {
+    public CarDTO(Car car) {
         this.id = car.getId();
         this.plates = car.getPlates();
         this.VIN = car.getVIN();
@@ -51,16 +49,7 @@ public class CarDTO {
         this.motorId = car.getMotorID();
         this.created = car.getCreatedAt();
         this.updated = car.getUpdatedAt();
-        if (includeModel) {
-            this.model = new ModelDTO(car.getModel(), true);
-        }
-        if (includeBranch) {
-            this.branch = new BranchDTO(car.getBranch(), false);
-        }
-        if (includeRepairs) {
-            car.getRepairs().forEach(repair -> {
-                this.repairs.add(new RepairDTO(repair, false, false, false, false));
-            });
-        }
+        this.model = new ModelDTO(car.getModel());
+        this.branch = new BranchDTO(car.getBranch());
     }
 }

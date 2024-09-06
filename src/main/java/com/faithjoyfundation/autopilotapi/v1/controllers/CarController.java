@@ -25,8 +25,7 @@ public class CarController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size
     ){
-        PaginatedResponse<CarDTO> cars = carService.findAll(search, page, size);
-        return ResponseEntity.ok(cars);
+        return ResponseEntity.ok(carService.findAll(search, page, size));
     }
 
     @GetMapping("/{id}")
@@ -34,15 +33,14 @@ public class CarController {
         return ResponseEntity.ok(carService.findDTOById(id));
     }
 
+    @GetMapping("/{id}/repairs")
+    public ResponseEntity<?> showRepairs(@PathVariable Long id) {
+        return ResponseEntity.ok(carService.findRepairsDTOById(id));
+    }
+
     @PostMapping
     public ResponseEntity<?> create(@Valid @RequestBody CarRequest carRequest) {
         CarDTO carDTO = carService.create(carRequest);
-        return (carDTO != null) ? ResponseEntity.status(201).body(carDTO) : ResponseEntity.internalServerError().build();
-    }
-
-    @PostMapping("/{id}/repair")
-    public ResponseEntity<?> createRepair(@PathVariable Long id, @Valid @RequestBody CarRepairRequest carRepairRequestRequest) {
-        CarDTO carDTO = carService.createRepair(id, carRepairRequestRequest);
         return (carDTO != null) ? ResponseEntity.status(201).body(carDTO) : ResponseEntity.internalServerError().build();
     }
 
