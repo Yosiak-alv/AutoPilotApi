@@ -1,4 +1,4 @@
-package com.faithjoyfundation.autopilotapi.v1.models;
+package com.faithjoyfundation.autopilotapi.v1.persistence.models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -27,17 +27,22 @@ public class Car {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String plates;
 
+    @Column(nullable = false)
     private String VIN;
 
-    @Column(name = "current_mileage")
+    @Column(name = "current_mileage", nullable = false)
     private String currentMileage;
 
+    @Column(nullable = false)
     private Integer year;
 
+    @Column(nullable = false)
     private String color;
 
+    @Column(nullable = false)
     private String motorID;
 
     @Column(name = "created_at", nullable = false, updatable = false)
@@ -51,12 +56,12 @@ public class Car {
     private LocalDateTime updatedAt;
 
     @ManyToOne
-    @JoinColumn(name = "model_id", foreignKey = @ForeignKey(name = "FK_cars_models"))
+    @JoinColumn(name = "model_id", foreignKey = @ForeignKey(name = "FK_cars_models"), nullable = false)
     @JsonIgnoreProperties({"cars", "hibernateLazyInitializer", "handler"})
     private Model model;
 
     @ManyToOne
-    @JoinColumn(name = "branch_id", foreignKey = @ForeignKey(name = "FK_cars_branches"))
+    @JoinColumn(name = "branch_id", foreignKey = @ForeignKey(name = "FK_cars_branches"), nullable = false)
     @JsonIgnoreProperties({"cars", "hibernateLazyInitializer", "handler"})
     private Branch branch;
 }

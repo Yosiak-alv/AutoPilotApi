@@ -1,11 +1,10 @@
-package com.faithjoyfundation.autopilotapi.v1.models;
+package com.faithjoyfundation.autopilotapi.v1.persistence.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -20,6 +19,7 @@ public class Department {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String name;
 
     @OneToMany(mappedBy = "department", cascade = CascadeType.ALL)

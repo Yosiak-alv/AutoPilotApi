@@ -1,4 +1,4 @@
-package com.faithjoyfundation.autopilotapi.v1.models;
+package com.faithjoyfundation.autopilotapi.v1.persistence.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
@@ -19,10 +19,11 @@ public class Municipality {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String name;
 
     @ManyToOne
-    @JoinColumn(name = "department_id", foreignKey = @ForeignKey(name = "FK_municipalities_departments"))
+    @JoinColumn(name = "department_id", foreignKey = @ForeignKey(name = "FK_municipalities_departments"), nullable = false)
     @JsonIgnoreProperties({"municipalities", "hibernateLazyInitializer", "handler"})
     private Department department;
 

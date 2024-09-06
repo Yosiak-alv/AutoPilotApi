@@ -1,4 +1,4 @@
-package com.faithjoyfundation.autopilotapi.v1.models;
+package com.faithjoyfundation.autopilotapi.v1.persistence.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
@@ -24,6 +24,7 @@ public class Brand {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String name;
 
     @OneToMany(mappedBy = "brand", cascade = CascadeType.ALL)

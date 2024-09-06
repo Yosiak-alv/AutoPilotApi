@@ -1,4 +1,4 @@
-package com.faithjoyfundation.autopilotapi.v1.models;
+package com.faithjoyfundation.autopilotapi.v1.persistence.models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -27,12 +27,16 @@ public class WorkShop {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String name;
 
+    @Column(nullable = false)
     private String email;
 
+    @Column(nullable = false)
     private String phone;
 
+    @Column(nullable = false)
     private String address;
 
     @Column(name = "created_at", nullable = false, updatable = false)
@@ -46,7 +50,7 @@ public class WorkShop {
     private LocalDateTime updatedAt;
 
     @ManyToOne
-    @JoinColumn(name = "municipality_id", foreignKey = @ForeignKey(name = "FK_workshops_municipalities"))
+    @JoinColumn(name = "municipality_id", foreignKey = @ForeignKey(name = "FK_workshops_municipalities"), nullable = false)
     @JsonIgnoreProperties({"workshops", "hibernateLazyInitializer", "handler"})
     private Municipality municipality;
 }

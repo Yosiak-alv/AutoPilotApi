@@ -1,6 +1,6 @@
-package com.faithjoyfundation.autopilotapi.v1.models.auth;
+package com.faithjoyfundation.autopilotapi.v1.persistence.models.auth;
 
-import com.faithjoyfundation.autopilotapi.v1.models.Branch;
+import com.faithjoyfundation.autopilotapi.v1.persistence.models.Branch;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -24,12 +24,14 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String name;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String email;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @Column(nullable = false)
     private String password;
 
     @Column(name = "created_at", nullable = false, updatable = false)
@@ -43,7 +45,7 @@ public class User {
     private LocalDateTime updatedAt;
 
     @ManyToOne
-    @JoinColumn(name = "branch_id", foreignKey = @ForeignKey(name = "FK_users_branches"))
+    @JoinColumn(name = "branch_id", foreignKey = @ForeignKey(name = "FK_users_branches"), nullable = false)
     @JsonIgnoreProperties({"users", "hibernateLazyInitializer", "handler"})
     private Branch branch;
 

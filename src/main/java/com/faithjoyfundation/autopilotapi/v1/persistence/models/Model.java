@@ -1,4 +1,4 @@
-package com.faithjoyfundation.autopilotapi.v1.models;
+package com.faithjoyfundation.autopilotapi.v1.persistence.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
@@ -24,10 +24,11 @@ public class Model {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String name;
 
     @ManyToOne
-    @JoinColumn(name = "brand_id", foreignKey = @ForeignKey(name = "FK_models_brands"))
+    @JoinColumn(name = "brand_id", foreignKey = @ForeignKey(name = "FK_models_brands"), nullable = false)
     @JsonIgnoreProperties({"models", "hibernateLazyInitializer", "handler"})
     private Brand brand;
 

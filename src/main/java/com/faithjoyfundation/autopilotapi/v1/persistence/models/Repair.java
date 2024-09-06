@@ -1,4 +1,4 @@
-package com.faithjoyfundation.autopilotapi.v1.models;
+package com.faithjoyfundation.autopilotapi.v1.persistence.models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -23,6 +23,7 @@ public class Repair {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private Double total;
 
     @Column(name = "created_at", nullable = false, updatable = false)
@@ -36,16 +37,26 @@ public class Repair {
     private LocalDateTime updatedAt;
 
     @ManyToOne
-    @JoinColumn(name = "car_id", foreignKey = @ForeignKey(name = "FK_repairs_cars"))
+    @JoinColumn(name="workshop_id", foreignKey = @ForeignKey(name = "FK_repairs_workshops"), nullable = false)
+    @JsonIgnoreProperties({"repairs", "hibernateLazyInitializer", "handler"})
+    private WorkShop workshop;
+
+
+    @ManyToOne
+    @JoinColumn(name = "car_id", foreignKey = @ForeignKey(name = "FK_repairs_cars"), nullable = false)
     @JsonIgnoreProperties({"repairs", "hibernateLazyInitializer", "handler"})
     private Car car;
 
     @ManyToOne
-    @JoinColumn(name = "repair_status_id", foreignKey = @ForeignKey(name = "FK_repairs_repair_statuses"))
+    @JoinColumn(name = "repair_status_id", foreignKey = @ForeignKey(name = "FK_repairs_repair_statuses"), nullable = false)
     @JsonIgnoreProperties({"repairs", "hibernateLazyInitializer", "handler"})
     private RepairStatus repairStatus;
 
     @OneToMany(mappedBy = "repair", cascade = CascadeType.ALL)
     @JsonIgnoreProperties({"repair", "hibernateLazyInitializer", "handler"})
     private Set<RepairDetail> repairDetails = new HashSet<>();
+
+    public Double calculateTotal() {
+        return repairDetails.stream().mapToDouble(RepairDetail::getPrice).sum();
+    }
 }
