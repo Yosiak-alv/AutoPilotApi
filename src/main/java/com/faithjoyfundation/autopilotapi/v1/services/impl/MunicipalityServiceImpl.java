@@ -18,7 +18,7 @@ public class MunicipalityServiceImpl implements MunicipalityService {
     @Override
     public Municipality findById(Long id) {
         return this.municipalityRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Municipality not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Municipio no encontrado con id: " + id));
     }
 
 }

@@ -5,7 +5,6 @@ import com.faithjoyfundation.autopilotapi.v1.dto.brands.BrandListDTO;
 import com.faithjoyfundation.autopilotapi.v1.dto.brands.BrandRequest;
 import com.faithjoyfundation.autopilotapi.v1.dto.brands.BrandDTO;
 import com.faithjoyfundation.autopilotapi.v1.exceptions.BadRequestException;
-import com.faithjoyfundation.autopilotapi.v1.exceptions.FieldUniqueException;
 import com.faithjoyfundation.autopilotapi.v1.exceptions.ResourceNotFoundException;
 import com.faithjoyfundation.autopilotapi.v1.models.Brand;
 import com.faithjoyfundation.autopilotapi.v1.repositories.BrandRepository;

@@ -3,11 +3,9 @@ package com.faithjoyfundation.autopilotapi.v1.services.impl;
 import com.faithjoyfundation.autopilotapi.v1.common.pagination.PaginatedResponse;
 import com.faithjoyfundation.autopilotapi.v1.dto.cars.CarDTO;
 import com.faithjoyfundation.autopilotapi.v1.dto.cars.CarListDTO;
-import com.faithjoyfundation.autopilotapi.v1.dto.cars.CarRepairRequest;
 import com.faithjoyfundation.autopilotapi.v1.dto.cars.CarRequest;
 import com.faithjoyfundation.autopilotapi.v1.dto.cars.relationships.CarRepairDTO;
 import com.faithjoyfundation.autopilotapi.v1.exceptions.BadRequestException;
-import com.faithjoyfundation.autopilotapi.v1.exceptions.FieldUniqueException;
 import com.faithjoyfundation.autopilotapi.v1.exceptions.ResourceNotFoundException;
 import com.faithjoyfundation.autopilotapi.v1.models.*;
 import com.faithjoyfundation.autopilotapi.v1.repositories.CarRepository;
@@ -18,7 +16,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -106,12 +103,12 @@ public class CarServiceImpl implements CarService {
     private void validateUniqueFields(String plates, String VIN, Long existingId) {
         Optional<Car> existingCar = carRepository.findByPlates(plates);
         if (existingCar.isPresent() && !existingCar.get().getId().equals(existingId)) {
-            throw new FieldUniqueException("placas ya existen en otro carro");
+            throw new BadRequestException("placas ya existen en otro carro");
         }
 
         existingCar = this.carRepository.findByVIN(VIN);
         if (existingCar.isPresent() && !existingCar.get().getId().equals(existingId)) {
-            throw new FieldUniqueException("VIN ya existe en otro carro");
+            throw new BadRequestException("VIN ya existe en otro carro");
         }
     }
 

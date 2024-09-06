@@ -22,6 +22,6 @@ public class DepartmentServiceImpl implements DepartmentService {
     @Override
     public Department findById(Long id) {
         return this.departmentRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Department not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Departamento no encontrado con id: " + id));
     }
 }

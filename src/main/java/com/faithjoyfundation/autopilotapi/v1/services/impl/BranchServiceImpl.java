@@ -4,7 +4,6 @@ import com.faithjoyfundation.autopilotapi.v1.common.pagination.PaginatedResponse
 import com.faithjoyfundation.autopilotapi.v1.dto.branches.BranchRequest;
 import com.faithjoyfundation.autopilotapi.v1.dto.branches.BranchDTO;
 import com.faithjoyfundation.autopilotapi.v1.dto.branches.BranchListDTO;
-import com.faithjoyfundation.autopilotapi.v1.exceptions.FieldUniqueException;
 import com.faithjoyfundation.autopilotapi.v1.exceptions.ResourceNotFoundException;
 import com.faithjoyfundation.autopilotapi.v1.models.Branch;
 import com.faithjoyfundation.autopilotapi.v1.models.Municipality;
@@ -83,7 +82,7 @@ public class BranchServiceImpl implements BranchService {
         return new BranchDTO(branch);
     }
 
-    private void validateUniqueFields(String email, String phone, Long existingId) throws FieldUniqueException {
+    private void validateUniqueFields(String email, String phone, Long existingId) {
 
         Optional<Branch> existingBranch = this.branchRepository.findByEmail(email);
         if (existingBranch.isPresent() && !existingBranch.get().getId().equals(existingId)) {

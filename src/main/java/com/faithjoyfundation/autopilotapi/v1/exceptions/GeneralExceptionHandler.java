@@ -38,15 +38,6 @@ public class GeneralExceptionHandler {
     }
 
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(FieldUniqueException.class)
-    public ErrorMessage fieldUniqueException(FieldUniqueException ex) {
-        return new ErrorMessage(
-                HttpStatus.BAD_REQUEST.value(),
-                "Validation Failed",
-                ex.getMessage());
-    }
-
-    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     @ExceptionHandler(BadRequestException.class)
     public ErrorMessage badRequestException(BadRequestException ex) {
         return new ErrorMessage(

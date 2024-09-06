@@ -1,15 +1,11 @@
 package com.faithjoyfundation.autopilotapi.v1.services.impl;
 
 import com.faithjoyfundation.autopilotapi.v1.common.pagination.PaginatedResponse;
-import com.faithjoyfundation.autopilotapi.v1.dto.branches.BranchDTO;
-import com.faithjoyfundation.autopilotapi.v1.dto.branches.BranchRequest;
 import com.faithjoyfundation.autopilotapi.v1.dto.workshops.WorkShopListDTO;
 import com.faithjoyfundation.autopilotapi.v1.dto.workshops.WorkShopRequest;
 import com.faithjoyfundation.autopilotapi.v1.dto.workshops.WorkShopDTO;
 import com.faithjoyfundation.autopilotapi.v1.exceptions.BadRequestException;
-import com.faithjoyfundation.autopilotapi.v1.exceptions.FieldUniqueException;
 import com.faithjoyfundation.autopilotapi.v1.exceptions.ResourceNotFoundException;
-import com.faithjoyfundation.autopilotapi.v1.models.Branch;
 import com.faithjoyfundation.autopilotapi.v1.models.Municipality;
 import com.faithjoyfundation.autopilotapi.v1.models.WorkShop;
 import com.faithjoyfundation.autopilotapi.v1.repositories.WorkShopRepository;
