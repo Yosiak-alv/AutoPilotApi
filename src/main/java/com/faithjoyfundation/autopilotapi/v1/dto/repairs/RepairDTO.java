@@ -8,8 +8,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Data
 public class RepairDTO {
@@ -33,24 +33,14 @@ public class RepairDTO {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime updated;
 
-    public RepairDTO(Repair repair, boolean includeWorkshop, boolean includeCar, boolean includeStatus, boolean includeDetails) {
+    public RepairDTO(Repair repair) {
         this.id = repair.getId();
         this.total = repair.getTotal();
         this.created = repair.getCreatedAt();
         this.updated = repair.getUpdatedAt();
-        if (includeWorkshop) {
-            this.workshop = new WorkShopDTO(repair.getWorkshop(), false);
-        }
-        if (includeCar) {
-            this.car = new CarDTO(repair.getCar(), false, false, false);
-        }
-        if (includeStatus) {
-            this.status = new RepairStatusDTO(repair.getRepairStatus());
-        }
-        if (includeDetails) {
-            repair.getRepairDetails().forEach(repairDetail -> {
-                this.details.add(new RepairDetailsDTO(repairDetail));
-            });
-        }
+        this.workshop = new WorkShopDTO(repair.getWorkshop());
+        this.car = new CarDTO(repair.getCar());
+        this.status = new RepairStatusDTO(repair.getRepairStatus());
+        this.details = repair.getRepairDetails().stream().map(RepairDetailsDTO::new).collect(Collectors.toSet());
     }
 }
