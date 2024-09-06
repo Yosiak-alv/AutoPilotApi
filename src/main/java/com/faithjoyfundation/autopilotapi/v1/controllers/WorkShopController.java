@@ -2,11 +2,9 @@ package com.faithjoyfundation.autopilotapi.v1.controllers;
 
 
 import com.faithjoyfundation.autopilotapi.v1.common.pagination.PaginatedResponse;
-import com.faithjoyfundation.autopilotapi.v1.dto.brands.BrandCreateRequest;
-import com.faithjoyfundation.autopilotapi.v1.dto.brands.BrandDTO;
-import com.faithjoyfundation.autopilotapi.v1.dto.workshops.WorkShopCreateRequest;
+import com.faithjoyfundation.autopilotapi.v1.dto.workshops.WorkShopListDTO;
+import com.faithjoyfundation.autopilotapi.v1.dto.workshops.WorkShopRequest;
 import com.faithjoyfundation.autopilotapi.v1.dto.workshops.WorkShopDTO;
-import com.faithjoyfundation.autopilotapi.v1.dto.workshops.WorkShopUpdateRequest;
 import com.faithjoyfundation.autopilotapi.v1.services.WorkShopService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -28,7 +26,7 @@ public class WorkShopController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size
     ){
-        PaginatedResponse<WorkShopDTO> workShops = workShopService.findAll(search, page, size);
+        PaginatedResponse<WorkShopListDTO> workShops = workShopService.findAll(search, page, size);
         return ResponseEntity.ok(workShops);
     }
 
@@ -38,14 +36,14 @@ public class WorkShopController {
     }
 
     @PostMapping
-    public ResponseEntity<?> create(@Valid @RequestBody WorkShopCreateRequest workShopCreateRequest) {
-        WorkShopDTO workShopDTO = workShopService.create(workShopCreateRequest);
+    public ResponseEntity<?> create(@Valid @RequestBody WorkShopRequest workShopRequest) {
+        WorkShopDTO workShopDTO = workShopService.create(workShopRequest);
         return (workShopDTO != null) ? ResponseEntity.status(201).body(workShopDTO) : ResponseEntity.internalServerError().build();
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable Long id, @Valid @RequestBody WorkShopUpdateRequest workShopUpdateRequest) {
-        WorkShopDTO workShopDTO = workShopService.update(id, workShopUpdateRequest);
+    public ResponseEntity<?> update(@PathVariable Long id, @Valid @RequestBody WorkShopRequest workShopRequest) {
+        WorkShopDTO workShopDTO = workShopService.update(id, workShopRequest);
         return (workShopDTO != null) ? ResponseEntity.status(200).body(workShopDTO) : ResponseEntity.internalServerError().build();
     }
 }

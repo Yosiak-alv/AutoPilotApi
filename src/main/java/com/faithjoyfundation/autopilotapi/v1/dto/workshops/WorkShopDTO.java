@@ -27,7 +27,7 @@ public class WorkShopDTO {
 
     private MunicipalityDTO municipality;
 
-    public WorkShopDTO(WorkShop workShop, boolean includeMunicipality) {
+    public WorkShopDTO(WorkShop workShop) {
         this.id = workShop.getId();
         this.name = workShop.getName();
         this.email = workShop.getEmail();
@@ -35,8 +35,6 @@ public class WorkShopDTO {
         this.address = workShop.getAddress();
         this.created = workShop.getCreatedAt();
         this.updated = workShop.getUpdatedAt();
-        if (includeMunicipality) {
-            this.municipality = new MunicipalityDTO(workShop.getMunicipality());
-        }
+        this.municipality = new MunicipalityDTO(workShop.getMunicipality());
     }
 }
