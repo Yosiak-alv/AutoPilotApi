@@ -1,18 +1,16 @@
 package com.faithjoyfundation.autopilotapi.v1.services;
 
 import com.faithjoyfundation.autopilotapi.v1.common.pagination.PaginatedResponse;
-import com.faithjoyfundation.autopilotapi.v1.dto.models.ModelCreateRequest;
+import com.faithjoyfundation.autopilotapi.v1.dto.models.ModelListDTO;
+import com.faithjoyfundation.autopilotapi.v1.dto.models.ModelRequest;
 import com.faithjoyfundation.autopilotapi.v1.dto.models.ModelDTO;
-import com.faithjoyfundation.autopilotapi.v1.dto.models.ModelUpdateRequest;
 import com.faithjoyfundation.autopilotapi.v1.models.Model;
 
-import java.util.List;
-
 public interface ModelService {
-    PaginatedResponse<ModelDTO> findAll(String search, int page, int size);
+    PaginatedResponse<ModelListDTO> findAll(Long brandId,String search, int page, int size);
     ModelDTO findById(Long id);
     Model findModelById(Long id);
-    ModelDTO create(ModelCreateRequest modelCreateRequest);
-    ModelDTO update(Long id, ModelUpdateRequest modelUpdateRequest);
+    ModelDTO create(ModelRequest modelRequest);
+    ModelDTO update(Long id, ModelRequest modelRequest);
     ModelDTO deleteById(Long id);
 }

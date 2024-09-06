@@ -1,9 +1,10 @@
 package com.faithjoyfundation.autopilotapi.v1.services.impl;
 
 import com.faithjoyfundation.autopilotapi.v1.common.pagination.PaginatedResponse;
-import com.faithjoyfundation.autopilotapi.v1.dto.brands.BrandCreateRequest;
+import com.faithjoyfundation.autopilotapi.v1.dto.brands.BrandListDTO;
+import com.faithjoyfundation.autopilotapi.v1.dto.brands.BrandRequest;
 import com.faithjoyfundation.autopilotapi.v1.dto.brands.BrandDTO;
-import com.faithjoyfundation.autopilotapi.v1.dto.brands.BrandUpdateRequest;
+import com.faithjoyfundation.autopilotapi.v1.exceptions.BadRequestException;
 import com.faithjoyfundation.autopilotapi.v1.exceptions.FieldUniqueException;
 import com.faithjoyfundation.autopilotapi.v1.exceptions.ResourceNotFoundException;
 import com.faithjoyfundation.autopilotapi.v1.models.Brand;
@@ -24,17 +25,14 @@ public class BrandServiceImpl implements BrandService {
     private BrandRepository brandRepository;
 
     @Override
-    public PaginatedResponse<BrandDTO> findAll(String search, int page, int size) {
+    public PaginatedResponse<BrandListDTO> findAll(String search, int page, int size) {
+        validatePageNumberAndSize(page, size);
         Pageable pageable = PageRequest.of(page, size);
-        Page<BrandDTO> brands;
+        Page<BrandListDTO> brands;
         if (search == null || search.isEmpty()) {
-            brands = brandRepository.findAllOrderedById(pageable).map(
-                    brand -> new BrandDTO(brand, false)
-            );
+            brands = brandRepository.findAllOrderedById(pageable).map(BrandListDTO::new);
         } else {
-            brands = brandRepository.findByNameContainingOrderById(search, pageable).map(
-                    brand -> new BrandDTO(brand, false)
-            );
+            brands = brandRepository.findByNameContainingOrderById(search, pageable).map(BrandListDTO::new);
         }
         return new PaginatedResponse<>(brands);
     }
@@ -42,23 +40,22 @@ public class BrandServiceImpl implements BrandService {
     @Override
     public BrandDTO findById(Long id) {
         Brand brand = findModelById(id);
-        return new BrandDTO(brand, true);
+        return new BrandDTO(brand);
     }
 
     @Override
-    public BrandDTO create(BrandCreateRequest brandCreateRequest) {
-        validateUniqueField(brandCreateRequest.getName(), null);
-        Brand brand = new Brand(null, brandCreateRequest.getName(),null);
-        return new BrandDTO(brandRepository.save(brand),false);
+    public BrandDTO create(BrandRequest brandRequest) {
+        validateUniqueField(brandRequest.getName(), null);
+        Brand brand = new Brand(null, brandRequest.getName(),null);
+        return new BrandDTO(brandRepository.save(brand));
     }
 
     @Override
-    public BrandDTO update(Long id, BrandUpdateRequest brandUpdateRequest) {
+    public BrandDTO update(Long id, BrandRequest brandRequest) {
         Brand brand = findModelById(id);
-        validateUniqueField(brandUpdateRequest.getName(), id);
-
-        brand.setName(brandUpdateRequest.getName());
-        return new BrandDTO(brandRepository.save(brand), true);
+        validateUniqueField(brandRequest.getName(), id);
+        brand.setName(brandRequest.getName());
+        return new BrandDTO(brandRepository.save(brand));
     }
 
     @Override
@@ -68,14 +65,24 @@ public class BrandServiceImpl implements BrandService {
 
     @Override
     public Brand findModelById(Long id) {
-        return brandRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Brand not found with id: " + id));
+        return brandRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Marca no encontrada con id: " + id));
     }
 
-    private void validateUniqueField(String name, Long existingId) throws FieldUniqueException {
+    private void validateUniqueField(String name, Long existingId) throws BadRequestException {
         Optional<Brand> brand = brandRepository.findByName(name);
 
         if(brand.isPresent() && !brand.get().getId().equals(existingId)) {
-            throw new FieldUniqueException("Brand already exists");
+            throw new BadRequestException("Ya existe una marca con ese nombre");
+        }
+    }
+
+    private void validatePageNumberAndSize(int page, int size) {
+        if (page < 0) {
+            throw new BadRequestException("el número de página no puede ser menor que cero.");
+        }
+
+        if (size <= 0) {
+            throw new BadRequestException("el tamaño de la página no puede ser menor o igual a cero.");
         }
     }
 }

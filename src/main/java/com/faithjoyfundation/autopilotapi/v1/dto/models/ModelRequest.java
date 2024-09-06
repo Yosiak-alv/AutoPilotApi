@@ -7,7 +7,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
-public class ModelUpdateRequest {
+public class ModelRequest {
     @NotNull()
     @NotEmpty
     //@UniqueName()

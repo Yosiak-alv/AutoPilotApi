@@ -13,11 +13,12 @@ import java.util.Optional;
 @Repository
 public interface ModelRepository extends JpaRepository<Model, Long> {
 
-    @Query("SELECT m FROM Model m ORDER BY m.id ASC")
-    Page<Model> findAllOrderedById(Pageable pageable);
+    @Query("SELECT m FROM Model m WHERE m.brand.id = :brandId ORDER BY m.id ASC")
+    Page<Model> findAllOrderedByIdAndBrand(@Param("brandId") Long brandId, Pageable pageable);
 
-    @Query("SELECT m FROM Model m WHERE m.name LIKE %:search% OR m.brand.name LIKE %:search%  ORDER BY m.id ASC")
-    Page<Model> findByNameContainingOrderById(@Param("search") String search, Pageable pageable);
+    @Query("SELECT m FROM Model m  WHERE (m.name LIKE %:search% ) AND m.brand.id = :brandId ORDER BY m.id ASC")
+    Page<Model> findAllBySearchAndBrand(@Param("brandId") Long brandId, @Param("search") String search, Pageable pageable);
+
 
     boolean existsByName(String name);
 
