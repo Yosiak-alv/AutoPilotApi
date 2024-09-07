@@ -8,9 +8,16 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "users")
@@ -49,7 +56,7 @@ public class User {
     @JsonIgnoreProperties({"users", "hibernateLazyInitializer", "handler"})
     private Branch branch;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
             name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id" , foreignKey = @ForeignKey(name = "FK_user_roles_users")),
@@ -57,5 +64,5 @@ public class User {
             uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "role_id"})
     )
     @JsonIgnoreProperties({"users", "hibernateLazyInitializer", "handler"})
-    private Set<Role> roles;
+    private Set<Role> roles = new HashSet<>();
 }
