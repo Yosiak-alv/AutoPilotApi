@@ -1,7 +1,7 @@
 -- Insert roles
-INSERT INTO roles (name) VALUES('ROLE_EMPLOYEE');
+INSERT INTO roles (name) VALUES('ROLE_ADMIN');
 INSERT INTO roles (name) VALUES('ROLE_MANAGER');
-INSERT INTO roles (name) VALUES ('ROLE_ADMIN');
+INSERT INTO roles (name) VALUES ('ROLE_EMPLOYEE');
 
 -- Insert rapair_statuses
 INSERT INTO repair_statuses (name) VALUES('PENDING');
@@ -457,3 +457,6 @@ INSERT INTO models (brand_id, name) VALUES (10, 'Wrangler');
 INSERT INTO models (brand_id, name) VALUES (10, 'Gladiator');
 INSERT INTO models (brand_id, name) VALUES (10, 'Grand Wagoneer');
 INSERT INTO models (brand_id, name) VALUES (10, 'Wagoneer');
+
+-- default branch
+INSERT INTO branches  (main, created_at, municipality_id, updated_at, address, email, name, phone) VALUES (true, NOW(), 81, NOW(), 'Calle el Mediterráneo, No. 662 Colonia Jardines de Guadalupe.', 'comunicacionesfya@feyalegria.org.sv', 'Fe y Alegria Antiguo Cuscatlan', '22431282');
