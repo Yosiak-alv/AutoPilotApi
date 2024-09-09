@@ -1,9 +1,9 @@
 package com.faithjoyfundation.autopilotapi.v1.services.impl;
 
 import com.faithjoyfundation.autopilotapi.v1.config.security.jwt.JwtTokenProvider;
-import com.faithjoyfundation.autopilotapi.v1.dto.AuthResponseDTO;
-import com.faithjoyfundation.autopilotapi.v1.dto.requests.LoginRequest;
-import com.faithjoyfundation.autopilotapi.v1.dto.requests.RegisterRequest;
+import com.faithjoyfundation.autopilotapi.v1.common.responses.AuthResponseDTO;
+import com.faithjoyfundation.autopilotapi.v1.dto.auth_managment.LoginRequest;
+import com.faithjoyfundation.autopilotapi.v1.dto.auth_managment.RegisterRequest;
 import com.faithjoyfundation.autopilotapi.v1.exceptions.errors.BadRequestException;
 import com.faithjoyfundation.autopilotapi.v1.exceptions.errors.ResourceNotFoundException;
 import com.faithjoyfundation.autopilotapi.v1.persistence.models.Branch;

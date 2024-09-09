@@ -1,8 +1,8 @@
 package com.faithjoyfundation.autopilotapi.v1.services;
 
-import com.faithjoyfundation.autopilotapi.v1.dto.AuthResponseDTO;
-import com.faithjoyfundation.autopilotapi.v1.dto.requests.LoginRequest;
-import com.faithjoyfundation.autopilotapi.v1.dto.requests.RegisterRequest;
+import com.faithjoyfundation.autopilotapi.v1.common.responses.AuthResponseDTO;
+import com.faithjoyfundation.autopilotapi.v1.dto.auth_managment.LoginRequest;
+import com.faithjoyfundation.autopilotapi.v1.dto.auth_managment.RegisterRequest;
 
 import java.util.Map;
 
