@@ -1,5 +1,6 @@
 package com.faithjoyfundation.autopilotapi.v1.persistence.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
@@ -13,7 +14,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Setter
 @Getter
-@ToString
+@ToString(exclude = {"repairs"})
 public class RepairStatus {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,6 +24,6 @@ public class RepairStatus {
     private String name;
 
     @OneToMany(mappedBy = "repairStatus", cascade = CascadeType.ALL)
-    @JsonIgnoreProperties({"repairStatus", "hibernateLazyInitializer", "handler"})
+    @JsonIgnore
     private Set<Repair> repairs = new HashSet<>();
 }
