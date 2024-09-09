@@ -13,7 +13,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Setter
 @Getter
-@ToString
+@ToString(exclude = {"municipalities"})
 public class Department {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,7 +23,7 @@ public class Department {
     private String name;
 
     @OneToMany(mappedBy = "department", cascade = CascadeType.ALL)
-    @JsonIgnoreProperties({"department", "hibernateLazyInitializer", "handler"})
+    @JsonIgnoreProperties({"department", "branches", "workShops", "hibernateLazyInitializer", "handler"})
     private Set<Municipality> municipalities = new HashSet<>();
 
     @Override

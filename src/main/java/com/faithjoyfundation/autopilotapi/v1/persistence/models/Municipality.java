@@ -13,7 +13,7 @@ import java.util.Set;
 @Table(name = "municipalities")
 @Getter
 @Setter
-@ToString
+@ToString(exclude = {"branches", "workShops"})
 public class Municipality {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
