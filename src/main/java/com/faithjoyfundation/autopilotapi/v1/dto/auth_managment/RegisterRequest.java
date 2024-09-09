@@ -1,4 +1,4 @@
-package com.faithjoyfundation.autopilotapi.v1.dto.requests;
+package com.faithjoyfundation.autopilotapi.v1.dto.auth_managment;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
