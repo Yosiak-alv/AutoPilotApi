@@ -34,7 +34,7 @@ public class Car {
     private String VIN;
 
     @Column(name = "current_mileage", nullable = false)
-    private String currentMileage;
+    private Integer currentMileage;
 
     @Column(nullable = false)
     private Integer year;
