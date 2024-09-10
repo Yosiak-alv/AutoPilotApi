@@ -24,6 +24,21 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
+    private static final String[] WHITE_LIST_URL = {
+            "/api/v1/auth/**",
+            "/api/v1/departments",
+            "/api/v1/repair-statuses",
+            "/v2/api-docs",
+            "/v3/api-docs",
+            "/v3/api-docs/**",
+            "/bus/v3/api-docs",
+            "/swagger-resources",
+            "/swagger-resources/**",
+            "/configuration/ui",
+            "/configuration/security",
+            "/swagger-ui/**",
+            "/webjars/**",
+            "/swagger-ui.html"};
     @Autowired
     private CustomUserDetailsService userDetailsService;
 
@@ -45,12 +60,13 @@ public class SecurityConfig {
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(authenticationEntryPoint))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests((auth) -> {
-                    auth.requestMatchers("/api/v1/auth/**").permitAll();
-                    auth.requestMatchers(HttpMethod.GET, "/api/v1/departments").permitAll();
-                    auth.requestMatchers(HttpMethod.GET, "/api/v1/repair-statuses").permitAll();
-                    auth.requestMatchers("/swagger-ui/**").permitAll();
-                    auth.requestMatchers("/v3/api-docs/**").permitAll();
-                    auth.requestMatchers("/bus/v3/api-docs/**").permitAll();
+                    auth.requestMatchers(WHITE_LIST_URL).permitAll();
+                    auth.requestMatchers(HttpMethod.DELETE, "/api/v1/repairs/**").hasRole("ADMIN");
+                    auth.requestMatchers(HttpMethod.DELETE, "/api/v1/workshops/**").hasRole("ADMIN");
+                    auth.requestMatchers(HttpMethod.DELETE, "/api/v1/cars/**").hasRole("ADMIN");
+                    auth.requestMatchers(HttpMethod.DELETE, "/api/v1/branches/**").hasRole("ADMIN");
+                    auth.requestMatchers(HttpMethod.DELETE, "/api/v1/models/**").hasRole("ADMIN");
+                    auth.requestMatchers(HttpMethod.DELETE, "/api/v1/brands/**").hasRole("ADMIN");
                     auth.anyRequest().authenticated();
                 });
 

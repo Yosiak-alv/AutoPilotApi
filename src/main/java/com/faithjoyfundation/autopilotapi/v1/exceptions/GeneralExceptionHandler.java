@@ -2,6 +2,7 @@ package com.faithjoyfundation.autopilotapi.v1.exceptions;
 
 import com.faithjoyfundation.autopilotapi.v1.exceptions.errors.BadRequestException;
 import com.faithjoyfundation.autopilotapi.v1.exceptions.errors.ResourceNotFoundException;
+import com.faithjoyfundation.autopilotapi.v1.exceptions.errors.UnauthorizedException;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -52,6 +53,15 @@ public class GeneralExceptionHandler {
         return new ErrorMessage(
                 HttpStatus.NOT_FOUND.value(),
                 "Not Found",
+                ex.getMessage());
+    }
+
+    @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler(UnauthorizedException.class)
+    public ErrorMessage unauthorizedException(UnauthorizedException ex) {
+        return new ErrorMessage(
+                HttpStatus.UNAUTHORIZED.value(),
+                "Unauthorized",
                 ex.getMessage());
     }
 }
