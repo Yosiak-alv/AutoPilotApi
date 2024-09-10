@@ -17,7 +17,7 @@ public class CarDTO {
 
     private String VIN;
 
-    private Double mileage;
+    private Integer mileage;
 
     private Integer year;
 

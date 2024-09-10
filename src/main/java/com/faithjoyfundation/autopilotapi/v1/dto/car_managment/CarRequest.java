@@ -20,7 +20,7 @@ public class CarRequest {
 
     @NotNull
     @Positive
-    private Double mileage;
+    private Integer mileage;
 
     @NotNull
     @Positive
