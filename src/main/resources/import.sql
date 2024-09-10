@@ -3,7 +3,7 @@ INSERT INTO roles (name) VALUES('ROLE_ADMIN');
 INSERT INTO roles (name) VALUES('ROLE_MANAGER');
 INSERT INTO roles (name) VALUES ('ROLE_EMPLOYEE');
 
--- Insert rapair_statuses
+-- Insert repairs_statuses
 INSERT INTO repair_statuses (name) VALUES('PENDING');
 INSERT INTO repair_statuses (name) VALUES ('IN_PROGRESS');
 INSERT INTO repair_statuses (name) VALUES ('COMPLETED');
