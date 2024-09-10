@@ -1,13 +1,13 @@
 package com.faithjoyfundation.autopilotapi.v1.services.impl;
 
+import com.faithjoyfundation.autopilotapi.v1.common.enums.RepairStatusType;
 import com.faithjoyfundation.autopilotapi.v1.common.responses.PaginatedResponse;
-import com.faithjoyfundation.autopilotapi.v1.dto.repair_managment.RepairDTO;
-import com.faithjoyfundation.autopilotapi.v1.dto.repair_managment.RepairListDTO;
-import com.faithjoyfundation.autopilotapi.v1.dto.repair_managment.RepairDetailRequest;
-import com.faithjoyfundation.autopilotapi.v1.dto.repair_managment.RepairRequest;
+import com.faithjoyfundation.autopilotapi.v1.dto.repair_managment.*;
 import com.faithjoyfundation.autopilotapi.v1.exceptions.errors.BadRequestException;
 import com.faithjoyfundation.autopilotapi.v1.exceptions.errors.ResourceNotFoundException;
+import com.faithjoyfundation.autopilotapi.v1.exceptions.errors.UnauthorizedException;
 import com.faithjoyfundation.autopilotapi.v1.persistence.models.*;
+import com.faithjoyfundation.autopilotapi.v1.persistence.models.auth.User;
 import com.faithjoyfundation.autopilotapi.v1.persistence.repositories.RepairDetailRepository;
 import com.faithjoyfundation.autopilotapi.v1.persistence.repositories.RepairRepository;
 import com.faithjoyfundation.autopilotapi.v1.persistence.repositories.RepairStatusRepository;
@@ -17,7 +17,11 @@ import com.faithjoyfundation.autopilotapi.v1.services.WorkShopService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -68,6 +72,11 @@ public class RepairServiceImpl implements RepairService {
     @Override
     public RepairDTO update(Long id, RepairRequest repairRequest) {
         Repair repair = this.findModelById(id);
+
+        if (repair.getRepairStatus().getName().equals(RepairStatusType.COMPLETED.name()) ||
+                repair.getRepairStatus().getName().equals(RepairStatusType.CANCELED.name())) {
+            throw new UnauthorizedException("You cannot update a repair that is already completed or canceled");
+        }
         Car car = this.carService.findModelById(repairRequest.getCarId());
         WorkShop workShop = this.workShopService.findModelById(repairRequest.getWorkshopId());
         RepairStatus repairStatus = repairStatusRepository
@@ -88,29 +97,25 @@ public class RepairServiceImpl implements RepairService {
     }
 
     @Override
-    public RepairDTO addRepairDetail(Long id, RepairDetailRequest repairDetailRequest) {
-        return null;
-    }
+    public RepairDTO updateRepairStatus(Long id, UpdateRepairStatusRequest request) {
+        Repair repair = this.findModelById(id);
+        RepairStatus repairStatus = repairStatusRepository
+                .findById(request.getRepairStatusId())
+                .orElseThrow(() -> new BadRequestException("RepairStatus not found with id " + request.getRepairStatusId()));
 
-    @Override
-    public RepairDTO updateRepairDetail(Long id, Long repairDetailId, RepairDetailRequest repairDetailRequest) {
-        return null;
-    }
-
-    @Override
-    public RepairDTO deleteRepairDetail(Long id, Long repairDetailId) {
-        return null;
-    }
-
-    @Override
-    public RepairDTO updateRepairStatus(Long id, Long repairStatusId) {
-        return null;
+        repair.setRepairStatus(repairStatus);
+        repair = repairRepository.save(repair);
+        return new RepairDTO(repair);
     }
 
     @Override
     public boolean delete(Long id) {
         Repair repair = this.findModelById(id);
         if (repair != null) {
+            if(repair.getRepairStatus().getName().equals(RepairStatusType.COMPLETED.name()) ||
+                    repair.getRepairStatus().getName().equals(RepairStatusType.CANCELED.name())){
+                throw new UnauthorizedException("You cannot delete a repair that is already completed or canceled");
+            }
             repairDetailRepository.deleteAll(repair.getRepairDetails());
             repairRepository.delete(repair);
             return true;
