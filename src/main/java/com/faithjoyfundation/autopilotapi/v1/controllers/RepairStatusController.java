@@ -22,7 +22,7 @@ public class RepairStatusController {
     private RepairStatusRepository repairStatusRepository;
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<RepairStatus>>> index() {
+    public ResponseEntity<?> index() {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new ApiResponse<>(HttpStatus.OK.value(), repairStatusRepository.findAll()));
     }

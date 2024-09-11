@@ -23,7 +23,7 @@ public class DepartmentController {
 
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<Department>>> index() {
+    public ResponseEntity<?> index() {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new ApiResponse<>(HttpStatus.OK.value(), departmentRepository.findAll()));
     }
