@@ -8,6 +8,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(
@@ -64,4 +66,8 @@ public class Car {
     @JoinColumn(name = "branch_id", foreignKey = @ForeignKey(name = "FK_cars_branches"), nullable = false)
     @JsonIgnoreProperties({"cars", "hibernateLazyInitializer", "handler"})
     private Branch branch;
+
+    @OneToMany(mappedBy = "car", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnoreProperties({"car", "hibernateLazyInitializer", "handler"})
+    private Set<Repair> repairs = new HashSet<>();
 }

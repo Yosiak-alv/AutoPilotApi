@@ -5,6 +5,7 @@ import com.faithjoyfundation.autopilotapi.v1.dto.car_managment.CarListDTO;
 import com.faithjoyfundation.autopilotapi.v1.common.responses.PaginatedResponse;
 import com.faithjoyfundation.autopilotapi.v1.dto.car_managment.CarRequest;
 import com.faithjoyfundation.autopilotapi.v1.exceptions.errors.BadRequestException;
+import com.faithjoyfundation.autopilotapi.v1.exceptions.errors.ConflictException;
 import com.faithjoyfundation.autopilotapi.v1.exceptions.errors.ResourceNotFoundException;
 import com.faithjoyfundation.autopilotapi.v1.persistence.models.Car;
 import com.faithjoyfundation.autopilotapi.v1.persistence.repositories.CarRepository;
@@ -54,7 +55,12 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public boolean delete(Long id) {
-        return false;
+        Car car = this.findModelById(id);
+        if (car.getRepairs().isEmpty()) {
+            carRepository.delete(car);
+            return true;
+        }
+        throw new ConflictException("Car has repairs associated with it and cannot be deleted.");
     }
 
     private CarDTO saveOrUpdate(Car car, CarRequest request, Long existingId) {
