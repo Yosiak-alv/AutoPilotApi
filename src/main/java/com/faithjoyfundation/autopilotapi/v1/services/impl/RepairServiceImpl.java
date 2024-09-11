@@ -75,7 +75,7 @@ public class RepairServiceImpl implements RepairService {
 
         if (repair.getRepairStatus().getName().equals(RepairStatusType.COMPLETED.name()) ||
                 repair.getRepairStatus().getName().equals(RepairStatusType.CANCELED.name())) {
-            throw new UnauthorizedException("You cannot update a repair that is already completed or canceled");
+            throw new BadRequestException("You cannot update a repair that is already completed or canceled");
         }
         Car car = this.carService.findModelById(repairRequest.getCarId());
         WorkShop workShop = this.workShopService.findModelById(repairRequest.getWorkshopId());
@@ -114,7 +114,7 @@ public class RepairServiceImpl implements RepairService {
         if (repair != null) {
             if(repair.getRepairStatus().getName().equals(RepairStatusType.COMPLETED.name()) ||
                     repair.getRepairStatus().getName().equals(RepairStatusType.CANCELED.name())){
-                throw new UnauthorizedException("You cannot delete a repair that is already completed or canceled");
+                throw new BadRequestException("You cannot delete a repair that is already completed or canceled");
             }
             repairDetailRepository.deleteAll(repair.getRepairDetails());
             repairRepository.delete(repair);
