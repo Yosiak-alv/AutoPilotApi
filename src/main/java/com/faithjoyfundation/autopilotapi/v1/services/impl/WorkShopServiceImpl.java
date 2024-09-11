@@ -5,6 +5,7 @@ import com.faithjoyfundation.autopilotapi.v1.dto.workshop_managment.WorkShopDTO;
 import com.faithjoyfundation.autopilotapi.v1.dto.workshop_managment.WorkShopListDTO;
 import com.faithjoyfundation.autopilotapi.v1.dto.workshop_managment.WorkShopRequest;
 import com.faithjoyfundation.autopilotapi.v1.exceptions.errors.BadRequestException;
+import com.faithjoyfundation.autopilotapi.v1.exceptions.errors.ConflictException;
 import com.faithjoyfundation.autopilotapi.v1.exceptions.errors.ResourceNotFoundException;
 import com.faithjoyfundation.autopilotapi.v1.persistence.models.Municipality;
 import com.faithjoyfundation.autopilotapi.v1.persistence.models.WorkShop;
@@ -53,7 +54,12 @@ public class WorkShopServiceImpl implements WorkShopService {
 
     @Override
     public boolean delete(Long id) {
-        return false;
+        WorkShop workShop = this.findModelById(id);
+        if (workShop.getRepairs().isEmpty()) {
+            workShopRepository.delete(workShop);
+            return true;
+        }
+        throw new ConflictException("WorkShop has repairs associated with it and cannot be deleted. ");
     }
 
     private WorkShopDTO saveOrUpdate(WorkShop workShop, WorkShopRequest workShopRequest, Long id) {

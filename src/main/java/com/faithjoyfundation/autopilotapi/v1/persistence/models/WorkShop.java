@@ -1,6 +1,7 @@
 package com.faithjoyfundation.autopilotapi.v1.persistence.models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
@@ -8,6 +9,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(
@@ -53,4 +56,8 @@ public class WorkShop {
     @JoinColumn(name = "municipality_id", foreignKey = @ForeignKey(name = "FK_workshops_municipalities"), nullable = false)
     @JsonIgnoreProperties({"workshops", "hibernateLazyInitializer", "handler"})
     private Municipality municipality;
+
+    @OneToMany(mappedBy = "workshop", cascade = CascadeType.ALL)
+    @JsonIgnoreProperties({"workshop", "hibernateLazyInitializer", "handler"})
+    private Set<Repair> repairs = new HashSet<>();
 }

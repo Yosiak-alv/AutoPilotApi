@@ -1,6 +1,7 @@
 package com.faithjoyfundation.autopilotapi.v1.exceptions;
 
 import com.faithjoyfundation.autopilotapi.v1.exceptions.errors.BadRequestException;
+import com.faithjoyfundation.autopilotapi.v1.exceptions.errors.ConflictException;
 import com.faithjoyfundation.autopilotapi.v1.exceptions.errors.ResourceNotFoundException;
 import com.faithjoyfundation.autopilotapi.v1.exceptions.errors.UnauthorizedException;
 import jakarta.validation.ConstraintViolationException;
@@ -62,6 +63,15 @@ public class GeneralExceptionHandler {
         return new ErrorMessage(
                 HttpStatus.UNAUTHORIZED.value(),
                 "Unauthorized",
+                ex.getMessage());
+    }
+
+    @ResponseStatus(value = HttpStatus.CONFLICT)
+    @ExceptionHandler(ConflictException.class)
+    public ErrorMessage conflictException(ConflictException ex) {
+        return new ErrorMessage(
+                HttpStatus.CONFLICT.value(),
+                "Conflict",
                 ex.getMessage());
     }
 }
