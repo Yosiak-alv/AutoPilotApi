@@ -5,6 +5,7 @@ import com.faithjoyfundation.autopilotapi.v1.dto.brand_managment.BrandListDTO;
 import com.faithjoyfundation.autopilotapi.v1.common.responses.PaginatedResponse;
 import com.faithjoyfundation.autopilotapi.v1.dto.brand_managment.BrandRequest;
 import com.faithjoyfundation.autopilotapi.v1.exceptions.errors.BadRequestException;
+import com.faithjoyfundation.autopilotapi.v1.exceptions.errors.ConflictException;
 import com.faithjoyfundation.autopilotapi.v1.exceptions.errors.ResourceNotFoundException;
 import com.faithjoyfundation.autopilotapi.v1.persistence.models.Brand;
 import com.faithjoyfundation.autopilotapi.v1.persistence.repositories.BrandRepository;
@@ -53,7 +54,16 @@ public class BrandServiceImpl implements BrandService {
 
     @Override
     public boolean delete(Long id) {
-        return false;
+        Brand brand = this.findModelById(id);
+
+        brand.getModels().forEach(model -> {
+            if (!model.getCars().isEmpty()) {
+                throw new ConflictException("Brand with id: " + id + ", cannot be deleted because it has associated models with cars.");
+            }
+        });
+
+        brandRepository.delete(brand);
+        return true;
     }
 
     private BrandDTO saveOrUpdate(Brand brand, BrandRequest brandRequest, Long existingId) {
