@@ -24,7 +24,7 @@ public class RepairController {
 
     @PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYEE', 'MANAGER')")
     @GetMapping("/{carId}/car")
-    public ResponseEntity<PaginatedResponse<RepairListDTO>> index(
+    public ResponseEntity<?> index(
             @PathVariable Long carId,
             @RequestParam(required = false, defaultValue = "") String search,
             @RequestParam(defaultValue = "0") int page,
@@ -34,28 +34,28 @@ public class RepairController {
 
     @PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYEE', 'MANAGER')")
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<RepairDTO>> show(@PathVariable Long id) {
+    public ResponseEntity<?> show(@PathVariable Long id) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new ApiResponse<>(HttpStatus.OK.value(), repairService.findDTOById(id)));
     }
 
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     @PostMapping
-    public ResponseEntity<ApiResponse<RepairDTO>> create(@Valid @RequestBody RepairRequest repairRequest) {
+    public ResponseEntity<?> create(@Valid @RequestBody RepairRequest repairRequest) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new ApiResponse<>(HttpStatus.CREATED.value(), "Repair Successfully Created", repairService.create(repairRequest)));
     }
 
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<RepairDTO>> update(@PathVariable Long id, @Valid @RequestBody RepairRequest repairRequest) {
+    public ResponseEntity<?> update(@PathVariable Long id, @Valid @RequestBody RepairRequest repairRequest) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new ApiResponse<>(HttpStatus.OK.value(),"Repair Successfully Updated", repairService.update(id, repairRequest)));
     }
 
     @PreAuthorize("hasAnyRole('ADMIN')")
     @PatchMapping("/{id}/status")
-    public ResponseEntity<ApiResponse<RepairDTO>> updateRepairStatus(@PathVariable Long id,
+    public ResponseEntity<?> updateRepairStatus(@PathVariable Long id,
                                                                      @Valid @RequestBody  UpdateRepairStatusRequest updateRepairStatusRequest) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new ApiResponse<>(HttpStatus.OK.value(),"Repair Status Successfully Updated", repairService.updateRepairStatus(id, updateRepairStatusRequest)));
@@ -63,7 +63,7 @@ public class RepairController {
 
     @PreAuthorize("hasAnyRole('ADMIN')")
     @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse<RepairDTO>> delete(@PathVariable Long id) {
+    public ResponseEntity<?> delete(@PathVariable Long id) {
         boolean deleted = repairService.delete(id);
         return deleted ? ResponseEntity.status(HttpStatus.OK)
                 .body(new ApiResponse<>(HttpStatus.OK.value(), "Repair Deleted Successfully")) :
