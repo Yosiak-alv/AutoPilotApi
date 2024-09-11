@@ -5,6 +5,7 @@ import com.faithjoyfundation.autopilotapi.v1.dto.brand_managment.ModelListDTO;
 import com.faithjoyfundation.autopilotapi.v1.common.responses.PaginatedResponse;
 import com.faithjoyfundation.autopilotapi.v1.dto.brand_managment.ModelRequest;
 import com.faithjoyfundation.autopilotapi.v1.exceptions.errors.BadRequestException;
+import com.faithjoyfundation.autopilotapi.v1.exceptions.errors.ConflictException;
 import com.faithjoyfundation.autopilotapi.v1.exceptions.errors.ResourceNotFoundException;
 import com.faithjoyfundation.autopilotapi.v1.persistence.models.Model;
 import com.faithjoyfundation.autopilotapi.v1.persistence.repositories.ModelRepository;
@@ -56,7 +57,12 @@ public class ModelServiceImpl implements ModelService {
 
     @Override
     public boolean delete(Long id) {
-        return false;
+        Model model = this.findModelById(id);
+        if (model.getCars().isEmpty()) {
+            modelRepository.delete(model);
+            return true;
+        }
+        throw new ConflictException("Model cannot be deleted because it has cars associated with it.");
     }
 
     private ModelDTO saveOrUpdate(Model model, ModelRequest modelRequest, Long existingId) {
