@@ -5,6 +5,7 @@ import com.faithjoyfundation.autopilotapi.v1.dto.branch_managment.BranchListDTO;
 import com.faithjoyfundation.autopilotapi.v1.common.responses.PaginatedResponse;
 import com.faithjoyfundation.autopilotapi.v1.dto.branch_managment.BranchRequest;
 import com.faithjoyfundation.autopilotapi.v1.exceptions.errors.BadRequestException;
+import com.faithjoyfundation.autopilotapi.v1.exceptions.errors.ConflictException;
 import com.faithjoyfundation.autopilotapi.v1.exceptions.errors.ResourceNotFoundException;
 import com.faithjoyfundation.autopilotapi.v1.persistence.models.Branch;
 import com.faithjoyfundation.autopilotapi.v1.persistence.models.Municipality;
@@ -56,7 +57,12 @@ public class BranchServiceImpl implements BranchService {
 
     @Override
     public boolean delete(Long id) {
-        return false;
+        Branch branch = this.findModelById(id);
+        if (branch.getCars().isEmpty() && branch.getUsers().isEmpty()){
+            branchRepository.delete(branch);
+            return true;
+        }
+        throw new ConflictException("Branch cannot be deleted because it has cars or users associated with it.");
     }
 
     private BranchDTO saveOrUpdate(Branch branch, BranchRequest branchRequest, Long existingId) {
