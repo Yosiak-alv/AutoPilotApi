@@ -56,10 +56,10 @@ public class User {
     @JsonIgnoreProperties({"users", "hibernateLazyInitializer", "handler"})
     private Branch branch;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinTable(
             name = "user_roles",
-            joinColumns = @JoinColumn(name = "user_id" , foreignKey = @ForeignKey(name = "FK_user_roles_users")),
+            joinColumns = @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "FK_user_roles_users")),
             inverseJoinColumns = @JoinColumn(name = "role_id", foreignKey = @ForeignKey(name = "FK_user_roles_roles")),
             uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "role_id"})
     )
