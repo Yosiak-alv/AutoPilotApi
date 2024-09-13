@@ -8,7 +8,7 @@ import com.faithjoyfundation.autopilotapi.v1.persistence.models.WorkShop;
 
 public interface WorkShopService {
 
-    PaginatedResponse<WorkShopListDTO> findAllBySearch(String search, int page, int size);
+    PaginatedResponse<WorkShopListDTO> findAllBySearch(String search, Long municipalityId, Long departmentId, int page, int size);
 
     WorkShopDTO findDTOById(Long id);
 

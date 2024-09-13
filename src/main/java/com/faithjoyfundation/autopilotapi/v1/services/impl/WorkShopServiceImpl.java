@@ -26,10 +26,10 @@ public class WorkShopServiceImpl implements WorkShopService {
     private final MunicipalityRepository municipalityRepository;
 
     @Override
-    public PaginatedResponse<WorkShopListDTO> findAllBySearch(String search, int page, int size) {
+    public PaginatedResponse<WorkShopListDTO> findAllBySearch(String search, Long municipalityId, Long departmentId, int page, int size) {
         validatePageNumberAndSize(page, size);
         Pageable pageable = PageRequest.of(page, size);
-        return new PaginatedResponse<>(workShopRepository.findAllBySearch(search, pageable).map(WorkShopListDTO::new));
+        return new PaginatedResponse<>(workShopRepository.findAllBySearch(search, municipalityId, departmentId, pageable).map(WorkShopListDTO::new));
     }
 
     @Override

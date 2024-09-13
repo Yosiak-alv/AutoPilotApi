@@ -7,7 +7,7 @@ import com.faithjoyfundation.autopilotapi.v1.persistence.models.Repair;
 
 public interface RepairService {
 
-    PaginatedResponse<RepairListDTO> findAllBySearch(Long carId, String search, int page, int size);
+    PaginatedResponse<RepairListDTO> findAllBySearch(Long carId, Long workshopId, Long repairStatusId,  int page, int size);
 
     RepairDTO findDTOById(Long id);
 

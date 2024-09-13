@@ -1,6 +1,7 @@
 package com.faithjoyfundation.autopilotapi.v1.dto.workshop_managment;
 
 
+import com.faithjoyfundation.autopilotapi.v1.dto.MunicipalityDTO;
 import com.faithjoyfundation.autopilotapi.v1.persistence.models.WorkShop;
 import lombok.Data;
 
@@ -14,16 +15,13 @@ public class WorkShopListDTO {
 
     private String phone;
 
-    private String municipality;
-
-    private String department;
+    private MunicipalityDTO municipality;
 
     public WorkShopListDTO(WorkShop workShop) {
         this.id = workShop.getId();
         this.name = workShop.getName();
         this.email = workShop.getEmail();
         this.phone = workShop.getPhone();
-        this.municipality = workShop.getMunicipality().getName();
-        this.department = workShop.getMunicipality().getDepartment().getName();
+        this.municipality = new MunicipalityDTO(workShop.getMunicipality());
     }
 }

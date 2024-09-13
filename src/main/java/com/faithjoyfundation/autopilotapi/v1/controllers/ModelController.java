@@ -7,6 +7,8 @@ import com.faithjoyfundation.autopilotapi.v1.dto.brand_managment.ModelListDTO;
 import com.faithjoyfundation.autopilotapi.v1.dto.brand_managment.ModelRequest;
 import com.faithjoyfundation.autopilotapi.v1.dto.car_managment.CarListDTO;
 import com.faithjoyfundation.autopilotapi.v1.services.ModelService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,17 +25,26 @@ public class ModelController {
     private ModelService modelService;
 
     @PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYEE', 'MANAGER')")
+    @Operation(summary = "Get all models of a brand", description = "Get all models of a brand with pagination and search, all users can access this endpoint")
     @GetMapping("/brand/{brandId}")
     public ResponseEntity<?> index(
+            @Parameter(description = "Brand ID to filter models by brand")
             @PathVariable(value = "brandId") Long brandId,
+
+            @Parameter(description = "Search term to filter by name, Example: Corolla")
             @RequestParam(required = false, defaultValue = "") String search,
+
+            @Parameter(description = "Page number for pagination, default 0")
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "5") int size
+
+            @Parameter(description = "Number of records per page default 10")
+            @RequestParam(defaultValue = "10") int size
     ){
         return ResponseEntity.status(HttpStatus.OK).body(modelService.findAllBySearch(brandId, search, page, size));
     }
 
     @PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYEE', 'MANAGER')")
+    @Operation(summary = "Get a model by ID", description = "Get a model by ID, all users can access this endpoint")
     @GetMapping("/{id}")
     public ResponseEntity<?> show(@PathVariable Long id){
         return ResponseEntity.status(HttpStatus.OK)
@@ -41,6 +52,7 @@ public class ModelController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Create a new model", description = "Create a new model, only admins can access this endpoint")
     @PostMapping
     public ResponseEntity<?> store(@Valid @RequestBody ModelRequest modelRequest){
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -48,6 +60,7 @@ public class ModelController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Update a model", description = "Update a model by ID, only admins can access this endpoint")
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @Valid @RequestBody ModelRequest modelRequest){
         return ResponseEntity.status(HttpStatus.OK)
@@ -55,6 +68,7 @@ public class ModelController {
     }
 
     //@PreAuthorize("hasRole('ADMIN')") is already set on security configuration
+    @Operation(summary = "Delete a model", description = "Delete a model by ID, only admins can access this endpoint")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id){
         boolean deleted = modelService.delete(id);

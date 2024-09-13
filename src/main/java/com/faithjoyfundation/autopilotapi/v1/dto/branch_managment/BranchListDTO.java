@@ -1,5 +1,6 @@
 package com.faithjoyfundation.autopilotapi.v1.dto.branch_managment;
 
+import com.faithjoyfundation.autopilotapi.v1.dto.MunicipalityDTO;
 import com.faithjoyfundation.autopilotapi.v1.persistence.models.Branch;
 import lombok.Data;
 
@@ -15,9 +16,7 @@ public class BranchListDTO {
 
     private boolean main;
 
-    private String municipality;
-
-    private String department;
+    private MunicipalityDTO municipality;
 
     public BranchListDTO(Branch branch) {
         this.id = branch.getId();
@@ -25,7 +24,6 @@ public class BranchListDTO {
         this.email = branch.getEmail();
         this.phone = branch.getPhone();
         this.main = branch.isMain();
-        this.municipality = branch.getMunicipality().getName();
-        this.department = branch.getMunicipality().getDepartment().getName();
+        this.municipality = new MunicipalityDTO(branch.getMunicipality());
     }
 }

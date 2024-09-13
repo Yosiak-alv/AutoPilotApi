@@ -7,6 +7,8 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -24,7 +26,7 @@ public class Repair {
     private Long id;
 
     @Column(nullable = false)
-    private Double total;
+    private BigDecimal total;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
@@ -56,7 +58,10 @@ public class Repair {
     @JsonIgnoreProperties({"repair", "hibernateLazyInitializer", "handler"})
     private Set<RepairDetail> repairDetails = new HashSet<>();
 
-    public Double calculateTotal() {
-        return repairDetails.stream().mapToDouble(RepairDetail::getPrice).sum();
+    public BigDecimal calculateTotal() {
+        BigDecimal total = repairDetails.stream()
+                .map(repairDetail -> BigDecimal.valueOf(repairDetail.getPrice()))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        return total.setScale(2, RoundingMode.HALF_UP);
     }
 }

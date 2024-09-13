@@ -10,9 +10,14 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface RepairRepository extends JpaRepository<Repair, Long> {
-    @Query("SELECT r FROM Repair r WHERE (r.repairStatus.name LIKE %:search% " +
-            "OR r.workshop.name LIKE %:search% OR r.workshop.municipality.name LIKE %:search% " +
-            "OR r.workshop.municipality.department.name LIKE %:search% OR r.workshop.phone LIKE %:search% " +
-            "OR r.workshop.email LIKE %:search% OR CAST(r.total AS string) = :search )AND r.car.id = :carId")
-    Page<Repair> findAllBySearch(@Param("carId") Long carId, String search, Pageable pageable);
+    @Query("SELECT r FROM Repair r " +
+            "WHERE (:workshopId IS NULL OR r.workshop.id = :workshopId) " +
+            "AND (:statusId IS NULL OR r.repairStatus.id = :statusId) " +
+            "AND r.car.id = :carId")
+    Page<Repair> findAllBySearch(
+            @Param("carId") Long carId,
+            @Param("workshopId") Long workshopId,
+            @Param("statusId") Long statusId,
+            Pageable pageable
+    );
 }

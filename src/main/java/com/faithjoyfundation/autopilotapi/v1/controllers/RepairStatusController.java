@@ -3,6 +3,7 @@ package com.faithjoyfundation.autopilotapi.v1.controllers;
 import com.faithjoyfundation.autopilotapi.v1.common.responses.ApiResponse;
 import com.faithjoyfundation.autopilotapi.v1.persistence.models.RepairStatus;
 import com.faithjoyfundation.autopilotapi.v1.persistence.repositories.RepairStatusRepository;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ public class RepairStatusController {
     @Autowired
     private RepairStatusRepository repairStatusRepository;
 
+    @Operation(summary = "Get all repair statuses", description = "Get all repair statuses, no authentication required")
     @GetMapping
     public ResponseEntity<?> index() {
         return ResponseEntity.status(HttpStatus.OK)

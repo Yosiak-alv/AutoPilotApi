@@ -3,6 +3,7 @@ package com.faithjoyfundation.autopilotapi.v1.controllers;
 import com.faithjoyfundation.autopilotapi.v1.common.responses.ApiResponse;
 import com.faithjoyfundation.autopilotapi.v1.persistence.models.Department;
 import com.faithjoyfundation.autopilotapi.v1.persistence.repositories.DepartmentRepository;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,7 +22,7 @@ public class DepartmentController {
 
     private final DepartmentRepository departmentRepository;
 
-
+    @Operation(summary = "Get all departments with municipalities", description = "Get all departments with array of municipalities, no authentication required")
     @GetMapping
     public ResponseEntity<?> index() {
         return ResponseEntity.status(HttpStatus.OK)

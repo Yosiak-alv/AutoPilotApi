@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -15,7 +16,7 @@ import java.util.stream.Collectors;
 public class RepairDTO {
     private Long id;
 
-    private Double total;
+    private BigDecimal total;
 
     @JsonIgnoreProperties({"created", "updated"})
     private WorkShopDTO workshop;

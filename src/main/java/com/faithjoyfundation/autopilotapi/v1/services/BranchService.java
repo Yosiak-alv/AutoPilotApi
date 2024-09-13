@@ -8,7 +8,7 @@ import com.faithjoyfundation.autopilotapi.v1.persistence.models.Branch;
 
 public interface BranchService {
 
-    PaginatedResponse<BranchListDTO> findAllBySearch(String search, int page, int size);
+    PaginatedResponse<BranchListDTO> findAllBySearch(String search, Long municipalityId, Long departmentId, int page, int size);
 
     BranchDTO findDTOById(Long id);
 

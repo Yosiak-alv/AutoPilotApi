@@ -6,6 +6,8 @@ import com.faithjoyfundation.autopilotapi.v1.dto.car_managment.CarDTO;
 import com.faithjoyfundation.autopilotapi.v1.dto.car_managment.CarListDTO;
 import com.faithjoyfundation.autopilotapi.v1.dto.car_managment.CarRequest;
 import com.faithjoyfundation.autopilotapi.v1.services.CarService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,16 +24,33 @@ public class CarController {
     private CarService carService;
 
     @PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYEE', 'MANAGER')")
+    @Operation(summary = "Get all cars", description = "Get all cars with pagination, filters and search, all users can access this endpoint")
     @GetMapping
     public  ResponseEntity<?> index(
+            @Parameter(description = "Search term to filter by plates, VIN, or year, Example: 2021")
             @RequestParam(required = false, defaultValue = "") String search,
+
+            @Parameter(description = "Page number for pagination, default 0")
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size
+
+            @Parameter(description = "Number of records per page default 10")
+            @RequestParam(defaultValue = "10") int size,
+
+            @Parameter(description = "Filter by Branch ID")
+            @RequestParam(required = false) Long branchId,
+
+            @Parameter(description = "Filter by Brand ID")
+            @RequestParam(required = false) Long brandId,
+
+            @Parameter(description = "Filter by Model ID")
+            @RequestParam(required = false) Long modelId
     ) {
-        return ResponseEntity.status(HttpStatus.OK).body(carService.findAllBySearch(search, page, size));
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(carService.findAllBySearch(search, branchId, brandId, modelId, page, size));
     }
 
     @PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYEE', 'MANAGER')")
+    @Operation(summary = "Get a car by ID", description = "Get a car by ID, all users can access this endpoint")
     @GetMapping("/{id}")
     public  ResponseEntity<?> show(@PathVariable Long id) {
         return ResponseEntity.status(HttpStatus.OK)
@@ -39,6 +58,7 @@ public class CarController {
     }
 
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
+    @Operation(summary = "Create a new car", description = "Create a new car, only admins and managers can access this endpoint")
     @PostMapping
     public  ResponseEntity<?> store(@Valid @RequestBody CarRequest carRequest) {
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -46,6 +66,7 @@ public class CarController {
     }
 
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
+    @Operation(summary = "Update a car", description = "Update a car by ID, only admins and managers can access this endpoint")
     @PutMapping("/{id}")
     public  ResponseEntity<?> update(@PathVariable Long id, @Valid @RequestBody CarRequest carRequest) {
         return ResponseEntity.status(HttpStatus.OK)
@@ -53,6 +74,7 @@ public class CarController {
     }
 
     //@PreAuthorize("hasRole('ADMIN')") is already set on security configuration
+    @Operation(summary = "Delete a car", description = "Delete a car by ID, only admins can access this endpoint")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {
         boolean deleted = carService.delete(id);

@@ -29,7 +29,7 @@ public class ModelServiceImpl implements ModelService {
 
     @Override
     public PaginatedResponse<ModelListDTO> findAllBySearch(Long brandId,String search, int page, int size) {
-        findModelById(brandId);
+        brandService.findModelById(brandId);
         validatePageNumberAndSize(page, size);
         Pageable pageable = PageRequest.of(page, size, Sort.by("id").ascending());
         return new PaginatedResponse<>(modelRepository.findAllBySearchAndBrand(brandId, search, pageable).map(ModelListDTO::new));

@@ -29,10 +29,10 @@ public class BranchServiceImpl implements BranchService {
     private final MunicipalityRepository municipalityRepository;
 
     @Override
-    public PaginatedResponse<BranchListDTO> findAllBySearch(String search, int page, int size) {
+    public PaginatedResponse<BranchListDTO> findAllBySearch(String search, Long municipalityId, Long departmentId, int page, int size) {
         validatePageNumberAndSize(page, size);
-        Pageable pageable = PageRequest.of(page, size, Sort.by("id").ascending());
-        return new PaginatedResponse<>(branchRepository.findAllBySearch(search, pageable).map(BranchListDTO::new));
+        Pageable pageable = PageRequest.of(page, size);
+        return new PaginatedResponse<>(branchRepository.findAllBySearch(search,municipalityId, departmentId, pageable).map(BranchListDTO::new));
     }
 
     @Override

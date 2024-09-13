@@ -7,6 +7,8 @@ import com.faithjoyfundation.autopilotapi.v1.dto.repair_managment.RepairListDTO;
 import com.faithjoyfundation.autopilotapi.v1.dto.repair_managment.RepairRequest;
 import com.faithjoyfundation.autopilotapi.v1.dto.repair_managment.UpdateRepairStatusRequest;
 import com.faithjoyfundation.autopilotapi.v1.services.RepairService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,16 +25,30 @@ public class RepairController {
     private RepairService repairService;
 
     @PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYEE', 'MANAGER')")
-    @GetMapping("/{carId}/car")
+    @Operation(summary = "Get all repairs of a car", description = "Get all repairs with pagination, filters and search, all users can access this endpoint")
+    @GetMapping("/car/{carId}")
     public ResponseEntity<?> index(
-            @PathVariable Long carId,
-            @RequestParam(required = false, defaultValue = "") String search,
+            @Parameter(description = "Car ID to filter repairs by car")
+            @PathVariable(value = "carId") Long carId,
+
+            @Parameter(description = "Page number for pagination, default 0")
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        return ResponseEntity.status(HttpStatus.OK).body(repairService.findAllBySearch(carId, search, page, size));
+
+            @Parameter(description = "Number of records per page default 10")
+            @RequestParam(defaultValue = "10") int size,
+
+            @Parameter(description = "Filter by Workshop ID")
+            @RequestParam(required = false) Long workshopId,
+
+            @Parameter(description = "Filter by Repair Status ID")
+            @RequestParam(required = false) Long repairStatusId
+    ) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(repairService.findAllBySearch(carId, workshopId, repairStatusId, page, size));
     }
 
     @PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYEE', 'MANAGER')")
+    @Operation(summary = "Get a repair by ID", description = "Get a repair by ID, all users can access this endpoint")
     @GetMapping("/{id}")
     public ResponseEntity<?> show(@PathVariable Long id) {
         return ResponseEntity.status(HttpStatus.OK)
@@ -40,6 +56,7 @@ public class RepairController {
     }
 
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
+    @Operation(summary = "Create a new repair", description = "Create a new repair, only admins and managers can access this endpoint")
     @PostMapping
     public ResponseEntity<?> create(@Valid @RequestBody RepairRequest repairRequest) {
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -47,6 +64,7 @@ public class RepairController {
     }
 
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
+    @Operation(summary = "Update a repair", description = "Update a repair by ID, only admins and managers can access this endpoint, cannot update a repair that is already completed or canceled")
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @Valid @RequestBody RepairRequest repairRequest) {
         return ResponseEntity.status(HttpStatus.OK)
@@ -54,6 +72,7 @@ public class RepairController {
     }
 
     @PreAuthorize("hasAnyRole('ADMIN')")
+    @Operation(summary = "Update a repair status", description = "Update a repair status by ID, only admins can access this endpoint")
     @PatchMapping("/{id}/status")
     public ResponseEntity<?> updateRepairStatus(@PathVariable Long id,
                                                                      @Valid @RequestBody  UpdateRepairStatusRequest updateRepairStatusRequest) {
@@ -61,7 +80,8 @@ public class RepairController {
                 .body(new ApiResponse<>(HttpStatus.OK.value(),"Repair Status Successfully Updated", repairService.updateRepairStatus(id, updateRepairStatusRequest)));
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN')")
+    //@PreAuthorize("hasAnyRole('ADMIN')") is already set on security configuration
+    @Operation(summary = "Delete a repair", description = "Delete a repair by ID, only admins can access this endpoint")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {
         boolean deleted = repairService.delete(id);

@@ -1,5 +1,7 @@
 package com.faithjoyfundation.autopilotapi.v1.dto.car_managment;
 
+import com.faithjoyfundation.autopilotapi.v1.dto.branch_managment.BranchListDTO;
+import com.faithjoyfundation.autopilotapi.v1.dto.brand_managment.ModelDTO;
 import com.faithjoyfundation.autopilotapi.v1.persistence.models.Car;
 import lombok.Data;
 
@@ -9,20 +11,20 @@ public class CarListDTO {
 
     private String plates;
 
+    private String VIN;
+
     private Integer year;
 
-    private String model;
+    private ModelDTO model;
 
-    private String brand;
-
-    private String branch;
+    private BranchListDTO branch;
 
     public CarListDTO(Car car){
         this.id = car.getId();
         this.plates = car.getPlates();
+        this.VIN = car.getVIN();
         this.year = car.getYear();
-        this.model = car.getModel().getName();
-        this.brand = car.getModel().getBrand().getName();
-        this.branch = car.getBranch().getName();
+        this.model = new ModelDTO(car.getModel());
+        this.branch = new BranchListDTO(car.getBranch());
     }
 }

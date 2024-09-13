@@ -27,10 +27,11 @@ public class CarServiceImpl implements CarService {
     private final BranchService branchService;
 
     @Override
-    public PaginatedResponse<CarListDTO> findAllBySearch(String search, int page, int size) {
+    public PaginatedResponse<CarListDTO> findAllBySearch(String search, Long branchId, Long brandId, Long modelId, int page, int size) {
         validatePageNumberAndSize(page, size);
         Pageable pageable = PageRequest.of(page, size);
-        return new PaginatedResponse<>(carRepository.findAllBySearch(search, pageable).map(CarListDTO::new));
+        return new PaginatedResponse<>(carRepository
+                .findAllBySearch(search, branchId, brandId, modelId, pageable).map(CarListDTO::new));
     }
 
     @Override

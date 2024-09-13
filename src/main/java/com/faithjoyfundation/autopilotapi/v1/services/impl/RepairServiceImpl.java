@@ -34,11 +34,12 @@ public class RepairServiceImpl implements RepairService {
     private final WorkShopService workShopService;
 
     @Override
-    public PaginatedResponse<RepairListDTO> findAllBySearch(Long carId,String search, int page, int size) {
+    public PaginatedResponse<RepairListDTO> findAllBySearch(Long carId, Long workshopId, Long repairStatusId, int page, int size) {
         validatePageNumberAndSize(page, size);
-        Car car = carService.findModelById(carId);
+        carService.findModelById(carId);
         Pageable pageable = PageRequest.of(page, size);
-        return new PaginatedResponse<>(repairRepository.findAllBySearch(car.getId(), search, pageable).map(RepairListDTO::new));
+        return new PaginatedResponse<>(repairRepository
+                .findAllBySearch(carId, workshopId, repairStatusId, pageable).map(RepairListDTO::new));
     }
 
     @Override
