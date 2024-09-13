@@ -3,6 +3,8 @@ package com.faithjoyfundation.autopilotapi.v1.controllers;
 import com.faithjoyfundation.autopilotapi.v1.common.responses.ApiResponse;
 import com.faithjoyfundation.autopilotapi.v1.dto.user_managment.UserRequest;
 import com.faithjoyfundation.autopilotapi.v1.services.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,16 +21,23 @@ public class UserController {
     private UserService userService;
 
     @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Get all users", description = "Get all users with pagination, filters and search, only admins can access this endpoint")
     @GetMapping
     public ResponseEntity<?> index(
+            @Parameter(description = "Search term to filter by name, email, or roles names, Example: John Doe")
             @RequestParam(required = false, defaultValue = "") String search,
+
+            @Parameter(description = "Page number for pagination, default 0")
             @RequestParam(defaultValue = "0") int page,
+
+            @Parameter(description = "Number of records per page default 10")
             @RequestParam(defaultValue = "10") int size
     ) {
         return ResponseEntity.status(HttpStatus.OK).body(userService.findAllBySearch(search, page, size));
     }
 
     @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Get a user by ID", description = "Get a user by ID, only admins can access this endpoint")
     @GetMapping("/{id}")
     public ResponseEntity<?> show(@PathVariable Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(
@@ -36,6 +45,7 @@ public class UserController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Create a new user", description = "Create a new user, only admins can access this endpoint")
     @PostMapping
     public ResponseEntity<?> store(@Valid @RequestBody UserRequest userRequest) {
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -43,6 +53,7 @@ public class UserController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Update a user", description = "Update a user by ID, only admins can access this endpoint")
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @Valid @RequestBody UserRequest userRequest) {
         return ResponseEntity.status(HttpStatus.OK)
@@ -50,6 +61,7 @@ public class UserController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Delete a user", description = "Delete a user by ID, only admins can access this endpoint")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {
         boolean deleted = userService.delete(id);
