@@ -1,10 +1,7 @@
 package com.faithjoyfundation.autopilotapi.v1.controllers;
 
 import com.faithjoyfundation.autopilotapi.v1.common.responses.ApiResponse;
-import com.faithjoyfundation.autopilotapi.v1.common.responses.PaginatedResponse;
-import com.faithjoyfundation.autopilotapi.v1.dto.car_managment.CarDTO;
-import com.faithjoyfundation.autopilotapi.v1.dto.car_managment.CarListDTO;
-import com.faithjoyfundation.autopilotapi.v1.dto.car_managment.CarRequest;
+import com.faithjoyfundation.autopilotapi.v1.persistence.dto.car.CarRequest;
 import com.faithjoyfundation.autopilotapi.v1.services.CarService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

@@ -1,6 +1,6 @@
 package com.faithjoyfundation.autopilotapi.v1.services;
 
-import com.faithjoyfundation.autopilotapi.v1.dto.auth_managment.NewPasswordRequest;
+import com.faithjoyfundation.autopilotapi.v1.persistence.dto.auth.NewPasswordRequest;
 
 import java.security.Principal;
 

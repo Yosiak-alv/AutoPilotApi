@@ -2,13 +2,7 @@ package com.faithjoyfundation.autopilotapi.v1.services.impl;
 
 import com.faithjoyfundation.autopilotapi.v1.config.security.jwt.JwtTokenProvider;
 import com.faithjoyfundation.autopilotapi.v1.common.responses.AuthResponseDTO;
-import com.faithjoyfundation.autopilotapi.v1.dto.auth_managment.LoginRequest;
-import com.faithjoyfundation.autopilotapi.v1.dto.auth_managment.RegisterRequest;
-import com.faithjoyfundation.autopilotapi.v1.exceptions.errors.BadRequestException;
-import com.faithjoyfundation.autopilotapi.v1.exceptions.errors.ResourceNotFoundException;
-import com.faithjoyfundation.autopilotapi.v1.persistence.models.Branch;
-import com.faithjoyfundation.autopilotapi.v1.persistence.models.auth.Role;
-import com.faithjoyfundation.autopilotapi.v1.persistence.models.auth.User;
+import com.faithjoyfundation.autopilotapi.v1.persistence.dto.auth.LoginRequest;
 import com.faithjoyfundation.autopilotapi.v1.persistence.repositories.BranchRepository;
 import com.faithjoyfundation.autopilotapi.v1.persistence.repositories.RoleRepository;
 import com.faithjoyfundation.autopilotapi.v1.persistence.repositories.UserRepository;
@@ -20,8 +14,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.*;
 
 @Service
 

@@ -1,9 +1,9 @@
 package com.faithjoyfundation.autopilotapi.v1.services;
 
 import com.faithjoyfundation.autopilotapi.v1.common.responses.PaginatedResponse;
-import com.faithjoyfundation.autopilotapi.v1.dto.user_managment.UserDTO;
-import com.faithjoyfundation.autopilotapi.v1.dto.user_managment.UserListDTO;
-import com.faithjoyfundation.autopilotapi.v1.dto.user_managment.UserRequest;
+import com.faithjoyfundation.autopilotapi.v1.persistence.dto.user.UserDTO;
+import com.faithjoyfundation.autopilotapi.v1.persistence.dto.user.UserListDTO;
+import com.faithjoyfundation.autopilotapi.v1.persistence.dto.user.UserRequest;
 import com.faithjoyfundation.autopilotapi.v1.persistence.models.auth.User;
 
 import java.security.Principal;

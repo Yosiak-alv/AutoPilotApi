@@ -1,9 +1,9 @@
 package com.faithjoyfundation.autopilotapi.v1.services.impl;
 
-import com.faithjoyfundation.autopilotapi.v1.dto.car_managment.CarDTO;
-import com.faithjoyfundation.autopilotapi.v1.dto.car_managment.CarListDTO;
+import com.faithjoyfundation.autopilotapi.v1.persistence.dto.car.CarDTO;
+import com.faithjoyfundation.autopilotapi.v1.persistence.dto.car.CarListDTO;
 import com.faithjoyfundation.autopilotapi.v1.common.responses.PaginatedResponse;
-import com.faithjoyfundation.autopilotapi.v1.dto.car_managment.CarRequest;
+import com.faithjoyfundation.autopilotapi.v1.persistence.dto.car.CarRequest;
 import com.faithjoyfundation.autopilotapi.v1.exceptions.errors.BadRequestException;
 import com.faithjoyfundation.autopilotapi.v1.exceptions.errors.ConflictException;
 import com.faithjoyfundation.autopilotapi.v1.exceptions.errors.ResourceNotFoundException;

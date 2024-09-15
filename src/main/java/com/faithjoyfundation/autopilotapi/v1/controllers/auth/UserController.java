@@ -1,8 +1,7 @@
 package com.faithjoyfundation.autopilotapi.v1.controllers.auth;
 
 import com.faithjoyfundation.autopilotapi.v1.common.responses.ApiResponse;
-import com.faithjoyfundation.autopilotapi.v1.dto.user_managment.UserRequest;
-import com.faithjoyfundation.autopilotapi.v1.persistence.models.auth.User;
+import com.faithjoyfundation.autopilotapi.v1.persistence.dto.user.UserRequest;
 import com.faithjoyfundation.autopilotapi.v1.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

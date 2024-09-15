@@ -1,9 +1,9 @@
 package com.faithjoyfundation.autopilotapi.v1.services;
 
 import com.faithjoyfundation.autopilotapi.v1.common.responses.PaginatedResponse;
-import com.faithjoyfundation.autopilotapi.v1.dto.workshop_managment.WorkShopDTO;
-import com.faithjoyfundation.autopilotapi.v1.dto.workshop_managment.WorkShopListDTO;
-import com.faithjoyfundation.autopilotapi.v1.dto.workshop_managment.WorkShopRequest;
+import com.faithjoyfundation.autopilotapi.v1.persistence.dto.workshop.WorkShopDTO;
+import com.faithjoyfundation.autopilotapi.v1.persistence.dto.workshop.WorkShopListDTO;
+import com.faithjoyfundation.autopilotapi.v1.persistence.dto.workshop.WorkShopRequest;
 import com.faithjoyfundation.autopilotapi.v1.persistence.models.WorkShop;
 
 public interface WorkShopService {

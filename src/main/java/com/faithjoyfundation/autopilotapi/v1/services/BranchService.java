@@ -1,9 +1,9 @@
 package com.faithjoyfundation.autopilotapi.v1.services;
 
-import com.faithjoyfundation.autopilotapi.v1.dto.branch_managment.BranchDTO;
-import com.faithjoyfundation.autopilotapi.v1.dto.branch_managment.BranchListDTO;
+import com.faithjoyfundation.autopilotapi.v1.persistence.dto.branch.BranchDTO;
+import com.faithjoyfundation.autopilotapi.v1.persistence.dto.branch.BranchListDTO;
 import com.faithjoyfundation.autopilotapi.v1.common.responses.PaginatedResponse;
-import com.faithjoyfundation.autopilotapi.v1.dto.branch_managment.BranchRequest;
+import com.faithjoyfundation.autopilotapi.v1.persistence.dto.branch.BranchRequest;
 import com.faithjoyfundation.autopilotapi.v1.persistence.models.Branch;
 
 public interface BranchService {

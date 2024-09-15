@@ -1,9 +1,9 @@
 package com.faithjoyfundation.autopilotapi.v1.services.impl;
 
 import com.faithjoyfundation.autopilotapi.v1.common.responses.PaginatedResponse;
-import com.faithjoyfundation.autopilotapi.v1.dto.workshop_managment.WorkShopDTO;
-import com.faithjoyfundation.autopilotapi.v1.dto.workshop_managment.WorkShopListDTO;
-import com.faithjoyfundation.autopilotapi.v1.dto.workshop_managment.WorkShopRequest;
+import com.faithjoyfundation.autopilotapi.v1.persistence.dto.workshop.WorkShopDTO;
+import com.faithjoyfundation.autopilotapi.v1.persistence.dto.workshop.WorkShopListDTO;
+import com.faithjoyfundation.autopilotapi.v1.persistence.dto.workshop.WorkShopRequest;
 import com.faithjoyfundation.autopilotapi.v1.exceptions.errors.BadRequestException;
 import com.faithjoyfundation.autopilotapi.v1.exceptions.errors.ConflictException;
 import com.faithjoyfundation.autopilotapi.v1.exceptions.errors.ResourceNotFoundException;

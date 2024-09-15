@@ -2,12 +2,13 @@ package com.faithjoyfundation.autopilotapi.v1.services.impl;
 
 import com.faithjoyfundation.autopilotapi.v1.common.enums.RepairStatusType;
 import com.faithjoyfundation.autopilotapi.v1.common.responses.PaginatedResponse;
-import com.faithjoyfundation.autopilotapi.v1.dto.repair_managment.*;
 import com.faithjoyfundation.autopilotapi.v1.exceptions.errors.BadRequestException;
 import com.faithjoyfundation.autopilotapi.v1.exceptions.errors.ResourceNotFoundException;
-import com.faithjoyfundation.autopilotapi.v1.exceptions.errors.UnauthorizedException;
+import com.faithjoyfundation.autopilotapi.v1.persistence.dto.repair.RepairDTO;
+import com.faithjoyfundation.autopilotapi.v1.persistence.dto.repair.RepairListDTO;
+import com.faithjoyfundation.autopilotapi.v1.persistence.dto.repair.RepairRequest;
+import com.faithjoyfundation.autopilotapi.v1.persistence.dto.repair.UpdateRepairStatusRequest;
 import com.faithjoyfundation.autopilotapi.v1.persistence.models.*;
-import com.faithjoyfundation.autopilotapi.v1.persistence.models.auth.User;
 import com.faithjoyfundation.autopilotapi.v1.persistence.repositories.RepairDetailRepository;
 import com.faithjoyfundation.autopilotapi.v1.persistence.repositories.RepairRepository;
 import com.faithjoyfundation.autopilotapi.v1.persistence.repositories.RepairStatusRepository;
@@ -17,11 +18,7 @@ import com.faithjoyfundation.autopilotapi.v1.services.WorkShopService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-
-import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor

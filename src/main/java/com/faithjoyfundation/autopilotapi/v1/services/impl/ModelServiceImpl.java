@@ -1,9 +1,9 @@
 package com.faithjoyfundation.autopilotapi.v1.services.impl;
 
-import com.faithjoyfundation.autopilotapi.v1.dto.brand_managment.ModelDTO;
-import com.faithjoyfundation.autopilotapi.v1.dto.brand_managment.ModelListDTO;
+import com.faithjoyfundation.autopilotapi.v1.persistence.dto.brand_model.ModelDTO;
+import com.faithjoyfundation.autopilotapi.v1.persistence.dto.brand_model.ModelListDTO;
 import com.faithjoyfundation.autopilotapi.v1.common.responses.PaginatedResponse;
-import com.faithjoyfundation.autopilotapi.v1.dto.brand_managment.ModelRequest;
+import com.faithjoyfundation.autopilotapi.v1.persistence.dto.brand_model.ModelRequest;
 import com.faithjoyfundation.autopilotapi.v1.exceptions.errors.BadRequestException;
 import com.faithjoyfundation.autopilotapi.v1.exceptions.errors.ConflictException;
 import com.faithjoyfundation.autopilotapi.v1.exceptions.errors.ResourceNotFoundException;

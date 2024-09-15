@@ -1,6 +1,6 @@
 package com.faithjoyfundation.autopilotapi.v1.services.impl;
 
-import com.faithjoyfundation.autopilotapi.v1.dto.auth_managment.NewPasswordRequest;
+import com.faithjoyfundation.autopilotapi.v1.persistence.dto.auth.NewPasswordRequest;
 import com.faithjoyfundation.autopilotapi.v1.exceptions.errors.BadRequestException;
 import com.faithjoyfundation.autopilotapi.v1.exceptions.errors.ResourceNotFoundException;
 import com.faithjoyfundation.autopilotapi.v1.persistence.models.auth.User;

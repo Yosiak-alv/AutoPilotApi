@@ -1,11 +1,7 @@
 package com.faithjoyfundation.autopilotapi.v1.controllers;
 
 import com.faithjoyfundation.autopilotapi.v1.common.responses.ApiResponse;
-import com.faithjoyfundation.autopilotapi.v1.common.responses.PaginatedResponse;
-import com.faithjoyfundation.autopilotapi.v1.dto.brand_managment.ModelDTO;
-import com.faithjoyfundation.autopilotapi.v1.dto.brand_managment.ModelListDTO;
-import com.faithjoyfundation.autopilotapi.v1.dto.brand_managment.ModelRequest;
-import com.faithjoyfundation.autopilotapi.v1.dto.car_managment.CarListDTO;
+import com.faithjoyfundation.autopilotapi.v1.persistence.dto.brand_model.ModelRequest;
 import com.faithjoyfundation.autopilotapi.v1.services.ModelService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

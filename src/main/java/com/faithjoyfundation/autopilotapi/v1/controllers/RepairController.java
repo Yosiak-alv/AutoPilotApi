@@ -1,11 +1,8 @@
 package com.faithjoyfundation.autopilotapi.v1.controllers;
 
 import com.faithjoyfundation.autopilotapi.v1.common.responses.ApiResponse;
-import com.faithjoyfundation.autopilotapi.v1.common.responses.PaginatedResponse;
-import com.faithjoyfundation.autopilotapi.v1.dto.repair_managment.RepairDTO;
-import com.faithjoyfundation.autopilotapi.v1.dto.repair_managment.RepairListDTO;
-import com.faithjoyfundation.autopilotapi.v1.dto.repair_managment.RepairRequest;
-import com.faithjoyfundation.autopilotapi.v1.dto.repair_managment.UpdateRepairStatusRequest;
+import com.faithjoyfundation.autopilotapi.v1.persistence.dto.repair.RepairRequest;
+import com.faithjoyfundation.autopilotapi.v1.persistence.dto.repair.UpdateRepairStatusRequest;
 import com.faithjoyfundation.autopilotapi.v1.services.RepairService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

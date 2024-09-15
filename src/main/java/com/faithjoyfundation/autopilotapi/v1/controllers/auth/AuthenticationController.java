@@ -1,7 +1,6 @@
 package com.faithjoyfundation.autopilotapi.v1.controllers.auth;
 
-import com.faithjoyfundation.autopilotapi.v1.dto.auth_managment.LoginRequest;
-import com.faithjoyfundation.autopilotapi.v1.dto.auth_managment.RegisterRequest;
+import com.faithjoyfundation.autopilotapi.v1.persistence.dto.auth.LoginRequest;
 import com.faithjoyfundation.autopilotapi.v1.services.AuthenticationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
