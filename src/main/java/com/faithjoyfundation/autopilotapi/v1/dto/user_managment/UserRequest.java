@@ -1,5 +1,6 @@
 package com.faithjoyfundation.autopilotapi.v1.dto.user_managment;
 
+import com.faithjoyfundation.autopilotapi.v1.common.validations.IsEmail;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import lombok.Data;
@@ -15,16 +16,10 @@ public class UserRequest {
 
     @NotNull
     @NotBlank
-    @Email
+    @IsEmail(message = "invalid email format, example: josias@gmail.com")
     private String email;
 
-    @NotNull
-    @Positive
-    private Long branchId;
-
     @Valid
-    //@ValidArray(expectedType = Long.class, message = "Role IDs must be non-null and of type Integer")
     @Size(min = 1)
     private List<RoleRequest> roles;
-
 }

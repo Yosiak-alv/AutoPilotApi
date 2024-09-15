@@ -18,8 +18,6 @@ public class UserDTO {
     private LocalDateTime created;
     private LocalDateTime updated;
 
-    private BranchDTO branch;
-
     private Set<Role> roles;
 
     public UserDTO(User user) {
@@ -28,7 +26,6 @@ public class UserDTO {
         this.email = user.getEmail();
         this.created = user.getCreatedAt();
         this.updated = user.getUpdatedAt();
-        this.branch = new BranchDTO(user.getBranch());
         this.roles = user.getRoles();
     }
 }

@@ -51,11 +51,6 @@ public class User {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    @ManyToOne
-    @JoinColumn(name = "branch_id", foreignKey = @ForeignKey(name = "FK_users_branches"), nullable = false)
-    @JsonIgnoreProperties({"users", "hibernateLazyInitializer", "handler"})
-    private Branch branch;
-
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinTable(
             name = "user_roles",

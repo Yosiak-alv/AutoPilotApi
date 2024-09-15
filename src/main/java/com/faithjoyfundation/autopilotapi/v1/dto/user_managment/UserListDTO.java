@@ -12,14 +12,12 @@ public class UserListDTO {
     private Long id;
     private String name;
     private String email;
-    private BranchListDTO branch;
     private Set<Role> roles;
 
     public UserListDTO(User user) {
         this.id = user.getId();
         this.name = user.getName();
         this.email = user.getEmail();
-        this.branch = new BranchListDTO(user.getBranch());
         this.roles = user.getRoles();
     }
 }

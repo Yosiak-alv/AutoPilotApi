@@ -1,18 +1,21 @@
 package com.faithjoyfundation.autopilotapi.v1.services.impl;
 
 import com.faithjoyfundation.autopilotapi.v1.common.responses.PaginatedResponse;
+import com.faithjoyfundation.autopilotapi.v1.common.utils.RandomPasswordGenerator;
+import com.faithjoyfundation.autopilotapi.v1.common.utils.TempPasswordEmailMessage;
 import com.faithjoyfundation.autopilotapi.v1.dto.user_managment.RoleRequest;
 import com.faithjoyfundation.autopilotapi.v1.dto.user_managment.UserDTO;
 import com.faithjoyfundation.autopilotapi.v1.dto.user_managment.UserListDTO;
 import com.faithjoyfundation.autopilotapi.v1.dto.user_managment.UserRequest;
 import com.faithjoyfundation.autopilotapi.v1.exceptions.errors.BadRequestException;
+import com.faithjoyfundation.autopilotapi.v1.exceptions.errors.ConflictException;
+import com.faithjoyfundation.autopilotapi.v1.exceptions.errors.ForbiddenException;
 import com.faithjoyfundation.autopilotapi.v1.exceptions.errors.ResourceNotFoundException;
-import com.faithjoyfundation.autopilotapi.v1.persistence.models.Branch;
 import com.faithjoyfundation.autopilotapi.v1.persistence.models.auth.Role;
 import com.faithjoyfundation.autopilotapi.v1.persistence.models.auth.User;
 import com.faithjoyfundation.autopilotapi.v1.persistence.repositories.RoleRepository;
 import com.faithjoyfundation.autopilotapi.v1.persistence.repositories.UserRepository;
-import com.faithjoyfundation.autopilotapi.v1.services.BranchService;
+import com.faithjoyfundation.autopilotapi.v1.services.EmailService;
 import com.faithjoyfundation.autopilotapi.v1.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -20,6 +23,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.security.Principal;
 import java.util.*;
 
 @Service
@@ -27,7 +31,7 @@ import java.util.*;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
-    private final BranchService branchService;
+    private final EmailService emailService;
     private final PasswordEncoder passwordEncoder;
 
     @Override
@@ -49,41 +53,71 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO create(UserRequest userRequest) {
-        Branch branch = branchService.findModelById(userRequest.getBranchId());
         List<Role> roles = getRoles(userRequest.getRoles().stream().map(RoleRequest::getId).toList());
-
         validateUniqueEmail(userRequest.getEmail(), null);
+
+        String tempPassword = RandomPasswordGenerator.generate(8);
+        emailService.sendEmail(userRequest.getEmail(), "AutoPilot: Temporal Password", TempPasswordEmailMessage.generate(tempPassword));
+
         User user = new User();
         user.setName(userRequest.getName());
         user.setEmail(userRequest.getEmail());
-        user.setBranch(branch);
         user.setRoles(new HashSet<>(roles));
-        String password = "password"; //TODO generate random password and send email
-        user.setPassword(passwordEncoder.encode(password));
+        user.setPassword(passwordEncoder.encode(tempPassword));
         return new UserDTO(userRepository.save(user));
     }
 
     @Override
-    public UserDTO update(Long id, UserRequest userRequest) {
+    public UserDTO update(Long id, UserRequest userRequest, Principal principal) {
         User user = findModelById(id);
+        User currentUser = getCurrentUser(principal);
         List<Role> roles = getRoles(userRequest.getRoles().stream().map(RoleRequest::getId).toList());
+
+        if (user.getId().equals(1L)) {
+            throw new BadRequestException("You cannot update the default admin user.");
+        }
+        if(currentUser.getId().equals(user.getId()) && !roles.stream().map(Role::getName).toList().contains("ROLE_ADMIN")) {
+            throw new BadRequestException("You cannot remove your admin role.");
+        }
         validateUniqueEmail(userRequest.getEmail(), id);
 
         user.setName(userRequest.getName());
         user.setEmail(userRequest.getEmail());
-        user.setBranch(branchService.findModelById(userRequest.getBranchId()));
         user.setRoles(new HashSet<>(roles));
         return new UserDTO(userRepository.save(user));
     }
 
     @Override
-    public boolean delete(Long id) {
+    public boolean resetTempPassword(Long id) {
         User user = findModelById(id);
-        if (user != null) {
-            userRepository.delete(user);
-            return true;
+
+        if (user.getId().equals(1L)) {
+            throw new ForbiddenException("You cannot reset the default admin user's password.");
         }
-        return false;
+        String tempPassword = RandomPasswordGenerator.generate(8);
+        emailService.sendEmail(user.getEmail(), "AutoPilot: Temporal Password", TempPasswordEmailMessage.generate(tempPassword));
+        user.setPassword(passwordEncoder.encode(tempPassword));
+        userRepository.save(user);
+        return true;
+    }
+
+    @Override
+    public boolean delete(Long id, Principal principal) {
+        User user = findModelById(id);
+        User currentUser = getCurrentUser(principal);
+        if(user.getId().equals(1L)) {
+            throw new ConflictException("You cannot delete the default admin user.");
+        }
+        if (currentUser != null && currentUser.getId().equals(user.getId())) {
+            throw new BadRequestException("You cannot delete yourself.");
+        }
+        userRepository.delete(user);
+        return true;
+    }
+
+    private User getCurrentUser(Principal principal) {
+        return userRepository.findByEmail(principal.getName())
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with email " + principal.getName()));
     }
 
     private List<Role> getRoles(List<Long> roleIds) {

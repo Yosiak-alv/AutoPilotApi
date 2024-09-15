@@ -14,7 +14,7 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("SELECT u FROM User u LEFT JOIN u.roles r  WHERE u.email LIKE %:search% " +
-            "OR u.name LIKE %:search%  OR u.branch.name LIKE %:search% OR r.name LIKE %:search%")
+            "OR u.name LIKE %:search%  OR r.name LIKE %:search%")
     Page<User> findAllBySearch(@Param("search") String search, Pageable pageable);
 
     Optional<User> findByEmail(String email);
