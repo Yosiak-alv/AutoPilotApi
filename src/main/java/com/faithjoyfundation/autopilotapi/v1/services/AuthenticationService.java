@@ -8,5 +8,4 @@ import java.util.Map;
 
 public interface AuthenticationService {
     AuthResponseDTO login(LoginRequest request);
-    Map<Object, Object>  register(RegisterRequest request);
 }

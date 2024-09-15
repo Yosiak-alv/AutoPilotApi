@@ -59,30 +59,4 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         return new AuthResponseDTO("You are logged in successfully", request.getEmail(), token);
     }
-
-    public Map<Object,Object> register(RegisterRequest request) {
-        Branch branch = branchRepository.findById(1L).orElseThrow(() -> new ResourceNotFoundException("Branch not found"));
-        Role role = roleRepository.findByName("ROLE_EMPLOYEE").orElseThrow(() -> new ResourceNotFoundException("Role not found"));
-
-        if (userRepository.existsByEmail(request.getEmail())) {
-            throw new BadRequestException("Email already exists");
-        }
-
-        User user = new User();
-        user.setName(request.getName());
-        user.setEmail(request.getEmail());
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
-        user.setBranch(branch);
-        user.setRoles(Collections.singleton(role));
-
-        User newUser = userRepository.save(user);
-
-        Map<Object,Object> response = new HashMap<>();
-        response.put("message", "User registered successfully");
-        response.put("user", newUser);
-
-        return response;
-
-    }
-
 }

@@ -43,24 +43,25 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
 
-        String token = getTokenFromRequest(request);
-        // Validate Token
-        if(StringUtils.hasText(token) && jwtTokenProvider.validateToken(token)){
+        try{
+            String token = getTokenFromRequest(request);
+            // Validate Token
+            if(StringUtils.hasText(token) && jwtTokenProvider.validateToken(token)){
+                String username = jwtTokenProvider.getUsername(token);
+                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
-            String username = jwtTokenProvider.getUsername(token);
-
-            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-
-            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                    userDetails,
-                    null,
-                    userDetails.getAuthorities()
-            );
-
-            authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
-            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+                        userDetails,
+                        null,
+                        userDetails.getAuthorities()
+                );
+                authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+            }
+        }catch (Exception e){
+            throw new RuntimeException("Could not set user authentication in security context: " + e.getMessage());
         }
+
         filterChain.doFilter(request, response);
     }
 

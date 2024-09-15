@@ -1,9 +1,6 @@
 package com.faithjoyfundation.autopilotapi.v1.exceptions;
 
-import com.faithjoyfundation.autopilotapi.v1.exceptions.errors.BadRequestException;
-import com.faithjoyfundation.autopilotapi.v1.exceptions.errors.ConflictException;
-import com.faithjoyfundation.autopilotapi.v1.exceptions.errors.ResourceNotFoundException;
-import com.faithjoyfundation.autopilotapi.v1.exceptions.errors.UnauthorizedException;
+import com.faithjoyfundation.autopilotapi.v1.exceptions.errors.*;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -14,6 +11,7 @@ import org.springframework.web.context.request.WebRequest;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 @RestControllerAdvice
 public class GeneralExceptionHandler {
@@ -72,6 +70,15 @@ public class GeneralExceptionHandler {
         return new ErrorMessage(
                 HttpStatus.CONFLICT.value(),
                 "Conflict",
+                ex.getMessage());
+    }
+
+    @ResponseStatus(value = HttpStatus.FORBIDDEN)
+    @ExceptionHandler(ForbiddenException.class)
+    public ErrorMessage forbiddenException(ForbiddenException ex) {
+        return new ErrorMessage(
+                HttpStatus.FORBIDDEN.value(),
+                "Forbidden",
                 ex.getMessage());
     }
 }

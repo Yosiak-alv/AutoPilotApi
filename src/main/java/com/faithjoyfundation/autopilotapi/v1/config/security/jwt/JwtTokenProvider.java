@@ -59,9 +59,16 @@ public class JwtTokenProvider {
         try {
             Jwts.parser().verifyWith(secretKey).build().parse(token);
             return true;
-        } catch (SignatureException | UnsupportedJwtException | MalformedJwtException | ExpiredJwtException |
-                 IllegalArgumentException e) {
-           return false;
+        } catch (SignatureException ex) {
+            throw new SignatureException("Invalid JWT signature");
+        } catch (MalformedJwtException ex) {
+            throw new MalformedJwtException("Invalid JWT token");
+        } catch (ExpiredJwtException ex) {
+            throw  new ExpiredJwtException(null, null, "Expired JWT token");
+        } catch (UnsupportedJwtException ex) {
+            throw new UnsupportedJwtException("Unsupported JWT token");
+        } catch (IllegalArgumentException ex) {
+            throw new IllegalArgumentException("JWT claims string is empty");
         }
     }
 }
