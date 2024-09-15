@@ -58,11 +58,11 @@ public class BranchServiceImpl implements BranchService {
     @Override
     public boolean delete(Long id) {
         Branch branch = this.findModelById(id);
-        if (branch.getCars().isEmpty() && branch.getUsers().isEmpty()){
+        if (branch.getCars().isEmpty()){
             branchRepository.delete(branch);
             return true;
         }
-        throw new ConflictException("Branch cannot be deleted because it has cars or users associated with it.");
+        throw new ConflictException("Branch cannot be deleted because it has cars associated with it.");
     }
 
     private BranchDTO saveOrUpdate(Branch branch, BranchRequest branchRequest, Long existingId) {

@@ -62,10 +62,6 @@ public class Branch {
 
     @OneToMany(mappedBy = "branch", cascade = CascadeType.ALL)
     @JsonIgnoreProperties({"branch", "hibernateLazyInitializer", "handler"})
-    private Set<User> users = new HashSet<>();
-
-    @OneToMany(mappedBy = "branch", cascade = CascadeType.ALL)
-    @JsonIgnoreProperties({"branch", "hibernateLazyInitializer", "handler"})
     private Set<Car> cars = new HashSet<>();
 
 
