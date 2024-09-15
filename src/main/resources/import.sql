@@ -462,5 +462,5 @@ INSERT INTO models (brand_id, name) VALUES (10, 'Wagoneer');
 INSERT INTO branches  (main, created_at, municipality_id, updated_at, address, email, name, phone) VALUES (true, NOW(), 81, NOW(), 'Calle el Mediterráneo, No. 662 Colonia Jardines de Guadalupe.', 'comunicacionesfya@feyalegria.org.sv', 'Fe y Alegria Antiguo Cuscatlan', '22431282');
 
 -- default user
-INSERT INTO users (email, password, name, branch_id, created_at, updated_at) VALUES ('josias@example.com','$2a$10$JDQIC24AMy9gN1tNWcOso.2cmoCIvHbdxp1asYclm1BxWKr90.15i', 'Josias', 1, NOW(), NOW());
+INSERT INTO users (email, password, name, created_at, updated_at) VALUES ('josiasalvarengaromero@gmail.com','$2a$10$JDQIC24AMy9gN1tNWcOso.2cmoCIvHbdxp1asYclm1BxWKr90.15i', 'Josias',  NOW(), NOW());
 INSERT INTO user_roles (user_id, role_id) VALUES (1, 1);
