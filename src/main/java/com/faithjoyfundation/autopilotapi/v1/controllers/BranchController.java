@@ -20,7 +20,7 @@ public class BranchController {
     @Autowired
     private BranchService branchService;
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYEE', 'MANAGER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     @Operation(summary = "Get all branches", description = "Get all branches with pagination, filters and search, all users can access this endpoint")
     @GetMapping
     public ResponseEntity<?> index(
@@ -42,7 +42,7 @@ public class BranchController {
         return ResponseEntity.status(HttpStatus.OK).body(branchService.findAllBySearch(search, municipalityId, departmentId, page, size));
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYEE', 'MANAGER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     @Operation(summary = "Get a branch by ID", description = "Get a branch by ID, all users can access this endpoint")
     @GetMapping("/{id}")
     public ResponseEntity<?> show(@PathVariable Long id) {

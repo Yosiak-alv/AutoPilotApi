@@ -20,7 +20,7 @@ public class ModelController {
     @Autowired
     private ModelService modelService;
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYEE', 'MANAGER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     @Operation(summary = "Get all models of a brand", description = "Get all models of a brand with pagination and search, all users can access this endpoint")
     @GetMapping("/brand/{brandId}")
     public ResponseEntity<?> index(
@@ -39,7 +39,7 @@ public class ModelController {
         return ResponseEntity.status(HttpStatus.OK).body(modelService.findAllBySearch(brandId, search, page, size));
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYEE', 'MANAGER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     @Operation(summary = "Get a model by ID", description = "Get a model by ID, all users can access this endpoint")
     @GetMapping("/{id}")
     public ResponseEntity<?> show(@PathVariable Long id){

@@ -20,7 +20,7 @@ public class BrandController {
     @Autowired
     private BrandService brandService;
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYEE', 'MANAGER')")
+    @PreAuthorize("hasAnyRole('ADMIN' , 'MANAGER')")
     @Operation(summary = "Get all brands", description = "Get all brands with pagination, filters and search, all users can access this endpoint")
     @GetMapping
     public ResponseEntity<?> index(
@@ -36,7 +36,7 @@ public class BrandController {
         return ResponseEntity.status(HttpStatus.OK).body(brandService.findAllBySearch(search, page, size));
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYEE', 'MANAGER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     @Operation(summary = "Get a brand by ID", description = "Get a brand by ID, all users can access this endpoint")
     @GetMapping("/{id}")
     public ResponseEntity<?> show(@PathVariable Long id) {

@@ -20,7 +20,7 @@ public class WorkShopController {
     @Autowired
     private WorkShopService workShopService;
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYEE', 'MANAGER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     @Operation(summary = "Get all workshops", description = "Get all workshops with pagination, filters and search , all users can access this endpoint")
     @GetMapping
     public ResponseEntity<?> index(
@@ -42,7 +42,7 @@ public class WorkShopController {
         return ResponseEntity.status(HttpStatus.OK).body(workShopService.findAllBySearch(search, municipalityId, departmentId, page, size));
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYEE', 'MANAGER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     @Operation(summary = "Get a workshop by ID", description = "Get a workshop by ID, all users can access this endpoint")
     @GetMapping("/{id}")
     public ResponseEntity<?> show(@PathVariable Long id) {
