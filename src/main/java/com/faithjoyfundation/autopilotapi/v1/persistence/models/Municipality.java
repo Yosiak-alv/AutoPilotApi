@@ -2,15 +2,15 @@ package com.faithjoyfundation.autopilotapi.v1.persistence.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(name = "municipalities")
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 @ToString(exclude = {"branches", "workShops"})

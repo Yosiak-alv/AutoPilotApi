@@ -59,7 +59,7 @@ public class WorkShopServiceImpl implements WorkShopService {
             workShopRepository.delete(workShop);
             return true;
         }
-        throw new ConflictException("WorkShop has repairs associated with it and cannot be deleted. ");
+        throw new ConflictException("WorkShop has repairs associated with it and cannot be deleted.");
     }
 
     private WorkShopDTO saveOrUpdate(WorkShop workShop, WorkShopRequest workShopRequest, Long id) {
