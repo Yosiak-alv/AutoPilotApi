@@ -21,7 +21,7 @@ public class EmailServiceImpl implements EmailService {
     @Value("${spring.mail.username}")
     private String from;
 
-    @Async
+    //@Async
     @Override
     public void sendEmail(String email, String subject, String message) {
         try {
