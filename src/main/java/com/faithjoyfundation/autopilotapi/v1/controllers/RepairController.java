@@ -22,7 +22,7 @@ public class RepairController {
     private RepairService repairService;
 
     @PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYEE', 'MANAGER')")
-    @Operation(summary = "Get all repairs of a car", description = "Get all repairs with pagination, filters and search, all users can access this endpoint")
+    @Operation(summary = "Get all repairs of a car", description = "Get all repairs with pagination, filters and search, Admin, Manager and Employee")
     @GetMapping("/car/{carId}")
     public ResponseEntity<?> index(
             @Parameter(description = "Car ID to filter repairs by car")
@@ -45,7 +45,7 @@ public class RepairController {
     }
 
     @PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYEE', 'MANAGER')")
-    @Operation(summary = "Get a repair by ID", description = "Get a repair by ID, all users can access this endpoint")
+    @Operation(summary = "Get a repair by ID", description = "Get a repair by ID, Admins, Managers and Employees")
     @GetMapping("/{id}")
     public ResponseEntity<?> show(@PathVariable Long id) {
         return ResponseEntity.status(HttpStatus.OK)
@@ -53,7 +53,7 @@ public class RepairController {
     }
 
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
-    @Operation(summary = "Create a new repair", description = "Create a new repair, only admins and managers can access this endpoint")
+    @Operation(summary = "Create a new repair", description = "Create a new repair, Admins and Managers only")
     @PostMapping
     public ResponseEntity<?> create(@Valid @RequestBody RepairRequest repairRequest) {
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -61,7 +61,7 @@ public class RepairController {
     }
 
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
-    @Operation(summary = "Update a repair", description = "Update a repair by ID, only admins and managers can access this endpoint, cannot update a repair that is already completed or canceled")
+    @Operation(summary = "Update a repair", description = "Update a repair by ID, Admins and Managers only, cannot update a repair that is already completed or canceled")
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @Valid @RequestBody RepairRequest repairRequest) {
         return ResponseEntity.status(HttpStatus.OK)
@@ -69,7 +69,7 @@ public class RepairController {
     }
 
     @PreAuthorize("hasAnyRole('ADMIN')")
-    @Operation(summary = "Update a repair status", description = "Update a repair status by ID, only admins can access this endpoint")
+    @Operation(summary = "Update a repair status", description = "Update a repair status by ID, Admins only")
     @PatchMapping("/{id}/status")
     public ResponseEntity<?> updateRepairStatus(@PathVariable Long id,
                                                                      @Valid @RequestBody  UpdateRepairStatusRequest updateRepairStatusRequest) {
@@ -78,7 +78,7 @@ public class RepairController {
     }
 
     //@PreAuthorize("hasAnyRole('ADMIN')") is already set on security configuration
-    @Operation(summary = "Delete a repair", description = "Delete a repair by ID, only admins can access this endpoint")
+    @Operation(summary = "Delete a repair", description = "Delete a repair by ID, Admins only")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {
         boolean deleted = repairService.delete(id);

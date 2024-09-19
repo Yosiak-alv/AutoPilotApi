@@ -21,7 +21,7 @@ public class BrandController {
     private BrandService brandService;
 
     @PreAuthorize("hasAnyRole('ADMIN' , 'MANAGER')")
-    @Operation(summary = "Get all brands", description = "Get all brands with pagination, filters and search, all users can access this endpoint")
+    @Operation(summary = "Get all brands", description = "Get all brands with pagination, filters and search, Managers and Admins only")
     @GetMapping
     public ResponseEntity<?> index(
             @Parameter(description = "Search term to filter by name, Example: Toyota")
@@ -37,14 +37,14 @@ public class BrandController {
     }
 
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
-    @Operation(summary = "Get a brand by ID", description = "Get a brand by ID, all users can access this endpoint")
+    @Operation(summary = "Get a brand by ID", description = "Get a brand by ID, Managers and Admins only")
     @GetMapping("/{id}")
     public ResponseEntity<?> show(@PathVariable Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse<>(HttpStatus.OK.value(), brandService.findDTOById(id)));
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @Operation(summary = "Create a new brand", description = "Create a new brand, only admins can access this endpoint")
+    @Operation(summary = "Create a new brand", description = "Create a new brand, Admins only")
     @PostMapping
     public ResponseEntity<?> store(@Valid @RequestBody BrandRequest brandRequest) {
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -52,7 +52,7 @@ public class BrandController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @Operation(summary = "Update a brand", description = "Update a brand, only admins can access this endpoint")
+    @Operation(summary = "Update a brand", description = "Update a brand, Admin only")
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @Valid @RequestBody BrandRequest brandRequest) {
         return ResponseEntity.status(HttpStatus.OK)
@@ -60,7 +60,7 @@ public class BrandController {
     }
 
     //@PreAuthorize("hasRole('ADMIN')") is already set on security configuration
-    @Operation(summary = "Delete a brand", description = "Delete a brand by ID, only admins can access this endpoint")
+    @Operation(summary = "Delete a brand", description = "Delete a brand by ID, Admins only")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {
         boolean deleted = brandService.delete(id);

@@ -8,13 +8,14 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@Tag(name = "Departments", description = "Only GET method is allowed, for populating dropdowns, no authentication required")
+@Tag(name = "Departments", description = "Only GET method is allowed, for populating dropdowns, authentication required.")
 @RestController
 @RequestMapping("/api/v1/departments")
 @RequiredArgsConstructor
@@ -22,7 +23,7 @@ public class DepartmentController {
 
     private final DepartmentRepository departmentRepository;
 
-    @Operation(summary = "Get all departments with municipalities", description = "Get all departments with array of municipalities, no authentication required")
+    @Operation(summary = "Get all departments with municipalities", description = "Get all departments with array of municipalities, authentication required")
     @GetMapping
     public ResponseEntity<?> index() {
         return ResponseEntity.status(HttpStatus.OK)

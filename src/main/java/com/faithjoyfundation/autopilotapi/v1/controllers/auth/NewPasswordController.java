@@ -24,7 +24,7 @@ public class NewPasswordController {
     private NewPasswordService newPasswordService;
 
     // @PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYEE', 'MANAGER')")
-    @Operation(summary = "Change current log user password", description = "Change current log user password, all users can access this endpoint")
+    @Operation(summary = "Change current log user password", description = "Change current log user password, authentication required.")
     @PostMapping
     public ResponseEntity<?> changePassword(@Valid @RequestBody NewPasswordRequest newPasswordRequest, Principal principalUser) {
         newPasswordService.changePassword(principalUser, newPasswordRequest);

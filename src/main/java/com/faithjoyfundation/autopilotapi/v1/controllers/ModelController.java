@@ -21,7 +21,7 @@ public class ModelController {
     private ModelService modelService;
 
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
-    @Operation(summary = "Get all models of a brand", description = "Get all models of a brand with pagination and search, all users can access this endpoint")
+    @Operation(summary = "Get all models of a brand", description = "Get all models of a brand with pagination and search, Admins and Managers only")
     @GetMapping("/brand/{brandId}")
     public ResponseEntity<?> index(
             @Parameter(description = "Brand ID to filter models by brand")
@@ -40,7 +40,7 @@ public class ModelController {
     }
 
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
-    @Operation(summary = "Get a model by ID", description = "Get a model by ID, all users can access this endpoint")
+    @Operation(summary = "Get a model by ID", description = "Get a model by ID, Admins and Managers only")
     @GetMapping("/{id}")
     public ResponseEntity<?> show(@PathVariable Long id){
         return ResponseEntity.status(HttpStatus.OK)
@@ -48,7 +48,7 @@ public class ModelController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @Operation(summary = "Create a new model", description = "Create a new model, only admins can access this endpoint")
+    @Operation(summary = "Create a new model", description = "Create a new model, Admins only")
     @PostMapping
     public ResponseEntity<?> store(@Valid @RequestBody ModelRequest modelRequest){
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -56,7 +56,7 @@ public class ModelController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @Operation(summary = "Update a model", description = "Update a model by ID, only admins can access this endpoint")
+    @Operation(summary = "Update a model", description = "Update a model by ID, Admins only")
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @Valid @RequestBody ModelRequest modelRequest){
         return ResponseEntity.status(HttpStatus.OK)
@@ -64,7 +64,7 @@ public class ModelController {
     }
 
     //@PreAuthorize("hasRole('ADMIN')") is already set on security configuration
-    @Operation(summary = "Delete a model", description = "Delete a model by ID, only admins can access this endpoint")
+    @Operation(summary = "Delete a model", description = "Delete a model by ID, Admins only")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id){
         boolean deleted = modelService.delete(id);

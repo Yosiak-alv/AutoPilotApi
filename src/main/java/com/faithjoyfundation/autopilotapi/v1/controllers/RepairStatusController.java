@@ -15,14 +15,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@Tag(name = "Repair Status", description = "Only GET method is allowed, for populating dropdowns, no authentication required")
+@Tag(name = "Repair Status", description = "Only GET method is allowed, for populating dropdowns, authentication required.")
 @RestController
 @RequestMapping("/api/v1/repair-statuses")
 public class RepairStatusController {
     @Autowired
     private RepairStatusRepository repairStatusRepository;
 
-    @Operation(summary = "Get all repair statuses", description = "Get all repair statuses, no authentication required")
+    @Operation(summary = "Get all repair statuses", description = "Get all repair statuses, authentication required")
     @GetMapping
     public ResponseEntity<?> index() {
         return ResponseEntity.status(HttpStatus.OK)

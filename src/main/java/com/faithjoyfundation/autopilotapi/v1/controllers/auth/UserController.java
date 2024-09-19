@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 
-@Tag(name = "Users", description = "API endpoints for user, only accessible to admin users")
+@Tag(name = "Users", description = "API endpoints for user, Admins only")
 @RestController
 @RequestMapping("/api/v1/users")
 public class UserController {
@@ -23,7 +23,7 @@ public class UserController {
     private UserService userService;
 
     @PreAuthorize("hasRole('ADMIN')")
-    @Operation(summary = "Get all users", description = "Get all users with pagination, filters and search, only admins can access this endpoint")
+    @Operation(summary = "Get all users", description = "Get all users with pagination, filters and search, Admins only")
     @GetMapping
     public ResponseEntity<?> index(
             @Parameter(description = "Search term to filter by name, email, or roles names, Example: John Doe")
@@ -39,7 +39,7 @@ public class UserController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @Operation(summary = "Get a user by ID", description = "Get a user by ID, only admins can access this endpoint")
+    @Operation(summary = "Get a user by ID", description = "Get a user by ID, Admins only")
     @GetMapping("/{id}")
     public ResponseEntity<?> show(@PathVariable Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(
@@ -47,7 +47,7 @@ public class UserController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @Operation(summary = "Create a new user", description = "Create a new user, only admins can access this endpoint")
+    @Operation(summary = "Create a new user", description = "Create a new user, Admins only")
     @PostMapping
     public ResponseEntity<?> store(@Valid @RequestBody UserRequest userRequest) {
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -55,7 +55,7 @@ public class UserController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @Operation(summary = "Update a user", description = "Update a user by ID, only admins can access this endpoint")
+    @Operation(summary = "Update a user", description = "Update a user by ID, Admins only")
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @Valid @RequestBody UserRequest userRequest, Principal userPrincipal) {
         return ResponseEntity.status(HttpStatus.OK)
@@ -63,7 +63,7 @@ public class UserController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @Operation(summary = "Reset a user's password", description = "Reset a user's password, generate a new password and send it to the user's email, only admins can access this endpoint")
+    @Operation(summary = "Reset a user's password", description = "Reset a user's password, generate a new password and send it to the user's email, Admins only")
     @PatchMapping("/{id}/reset-password")
     public ResponseEntity<?> resetPassword(@PathVariable Long id) {
         boolean reset = userService.resetTempPassword(id);
@@ -74,7 +74,7 @@ public class UserController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @Operation(summary = "Delete a user", description = "Delete a user by ID, only admins can access this endpoint")
+    @Operation(summary = "Delete a user", description = "Delete a user by ID, Admins only")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id, Principal userPrincipal) {
         boolean deleted = userService.delete(id, userPrincipal);

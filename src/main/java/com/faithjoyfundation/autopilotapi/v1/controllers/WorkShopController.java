@@ -21,7 +21,7 @@ public class WorkShopController {
     private WorkShopService workShopService;
 
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
-    @Operation(summary = "Get all workshops", description = "Get all workshops with pagination, filters and search , all users can access this endpoint")
+    @Operation(summary = "Get all workshops", description = "Get all workshops with pagination, filters and search , Admins and Managers only")
     @GetMapping
     public ResponseEntity<?> index(
             @Parameter(description = "Search term to filter by name, email, or phone, Example: 78085392")
@@ -43,7 +43,7 @@ public class WorkShopController {
     }
 
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
-    @Operation(summary = "Get a workshop by ID", description = "Get a workshop by ID, all users can access this endpoint")
+    @Operation(summary = "Get a workshop by ID", description = "Get a workshop by ID, Admins and Managers only")
     @GetMapping("/{id}")
     public ResponseEntity<?> show(@PathVariable Long id) {
         return ResponseEntity.status(HttpStatus.OK)
@@ -51,7 +51,7 @@ public class WorkShopController {
     }
 
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
-    @Operation(summary = "Create a new workshop", description = "Create a new workshop, only admins and managers can access this endpoint")
+    @Operation(summary = "Create a new workshop", description = "Create a new workshop, Admins and Managers only")
     @PostMapping
     public ResponseEntity<?> store(@Valid @RequestBody WorkShopRequest workShopRequest) {
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -59,7 +59,7 @@ public class WorkShopController {
     }
 
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
-    @Operation(summary = "Update a workshop", description = "Update a workshop by ID, only admins and managers can access this endpoint")
+    @Operation(summary = "Update a workshop", description = "Update a workshop by ID, Admins and Managers only")
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @Valid @RequestBody WorkShopRequest workShopRequest) {
         return ResponseEntity.status(HttpStatus.OK)
@@ -67,7 +67,7 @@ public class WorkShopController {
     }
 
     //@PreAuthorize("hasRole('ADMIN')") is already set on security configuration
-    @Operation(summary = "Delete a workshop", description = "Delete a workshop by ID, only admins can access this endpoint")
+    @Operation(summary = "Delete a workshop", description = "Delete a workshop by ID, Admins only")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {
         boolean deleted = workShopService.delete(id);

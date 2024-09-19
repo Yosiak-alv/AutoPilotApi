@@ -21,7 +21,7 @@ public class BranchController {
     private BranchService branchService;
 
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
-    @Operation(summary = "Get all branches", description = "Get all branches with pagination, filters and search, all users can access this endpoint")
+    @Operation(summary = "Get all branches", description = "Get all branches with pagination, filters and search, Managers and Admins only")
     @GetMapping
     public ResponseEntity<?> index(
             @Parameter(description = "Search term to filter by name, email, or phone, Example: 78085392")
@@ -43,14 +43,14 @@ public class BranchController {
     }
 
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
-    @Operation(summary = "Get a branch by ID", description = "Get a branch by ID, all users can access this endpoint")
+    @Operation(summary = "Get a branch by ID", description = "Get a branch by ID, Managers and Admins only")
     @GetMapping("/{id}")
     public ResponseEntity<?> show(@PathVariable Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse<>(HttpStatus.OK.value(), branchService.findDTOById(id)));
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @Operation(summary = "Create a new branch", description = "Create a new branch, only admins can access this endpoint")
+    @Operation(summary = "Create a new branch", description = "Create a new branch, Admins only")
     @PostMapping
     public ResponseEntity<?> store(@Valid @RequestBody BranchRequest branchRequest) {
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -58,7 +58,7 @@ public class BranchController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @Operation(summary = "Update a branch", description = "Update a branch by ID, only admins can access this endpoint")
+    @Operation(summary = "Update a branch", description = "Update a branch by ID, Admins only")
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @Valid @RequestBody BranchRequest branchRequest) {
         return ResponseEntity.status(HttpStatus.OK)
@@ -66,7 +66,7 @@ public class BranchController {
     }
 
     //@PreAuthorize("hasRole('ADMIN')")
-    @Operation(summary = "Delete a branch", description = "Delete a branch by ID, only admins can access this endpoint")
+    @Operation(summary = "Delete a branch", description = "Delete a branch by ID, Admins only")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {
         boolean deleted = branchService.delete(id);

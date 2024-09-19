@@ -21,7 +21,7 @@ public class CarController {
     private CarService carService;
 
     @PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYEE', 'MANAGER')")
-    @Operation(summary = "Get all cars", description = "Get all cars with pagination, filters and search, all users can access this endpoint")
+    @Operation(summary = "Get all cars", description = "Get all cars with pagination, filters and search, Admins, Managers and Employees")
     @GetMapping
     public  ResponseEntity<?> index(
             @Parameter(description = "Search term to filter by plates, VIN, or year, Example: 2021")
@@ -47,7 +47,7 @@ public class CarController {
     }
 
     @PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYEE', 'MANAGER')")
-    @Operation(summary = "Get a car by ID", description = "Get a car by ID, all users can access this endpoint")
+    @Operation(summary = "Get a car by ID", description = "Get a car by ID, Admins, Managers and Employees")
     @GetMapping("/{id}")
     public  ResponseEntity<?> show(@PathVariable Long id) {
         return ResponseEntity.status(HttpStatus.OK)
@@ -55,7 +55,7 @@ public class CarController {
     }
 
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
-    @Operation(summary = "Create a new car", description = "Create a new car, only admins and managers can access this endpoint")
+    @Operation(summary = "Create a new car", description = "Create a new car, Admins and Managers only")
     @PostMapping
     public  ResponseEntity<?> store(@Valid @RequestBody CarRequest carRequest) {
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -63,7 +63,7 @@ public class CarController {
     }
 
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
-    @Operation(summary = "Update a car", description = "Update a car by ID, only admins and managers can access this endpoint")
+    @Operation(summary = "Update a car", description = "Update a car by ID, Admins and Managers only")
     @PutMapping("/{id}")
     public  ResponseEntity<?> update(@PathVariable Long id, @Valid @RequestBody CarRequest carRequest) {
         return ResponseEntity.status(HttpStatus.OK)
@@ -71,7 +71,7 @@ public class CarController {
     }
 
     //@PreAuthorize("hasRole('ADMIN')") is already set on security configuration
-    @Operation(summary = "Delete a car", description = "Delete a car by ID, only admins can access this endpoint")
+    @Operation(summary = "Delete a car", description = "Delete a car by ID, Admins only")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {
         boolean deleted = carService.delete(id);
