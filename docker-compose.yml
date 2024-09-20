@@ -12,6 +12,11 @@ services:
         POSTGRES_DB: ${SPRING_DATASOURCE_DB}
     volumes:
       - ./postgres:/var/lib/postgesql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "sh -c 'pg_isready -U ${SPRING_DATASOURCE_USERNAME} -d ${SPRING_DATASOURCE_DB}'" ]
+      interval: 10s
+      timeout: 3s
+      retries: 3
   app:
     container_name: autopilot_app
     build:
